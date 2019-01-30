@@ -64,6 +64,11 @@ public class GameObjectTagsEditor : Editor
     private bool isUnfolded = true;
 
     /// <summary>
+    /// Alls tags of this object.
+    /// </summary>
+    private List<Tag> objectTags = new List<Tag>();
+
+    /// <summary>
     /// Tag icon to display in the inspector.
     /// </summary>
     private Texture2D tagIcon = null;
@@ -129,6 +134,9 @@ public class GameObjectTagsEditor : Editor
 
         // Load the tag icon
         tagIcon = EditorGUIUtility.Load("Assets/Icons/Resources/tag.png") as Texture2D;
+
+        // Get all tags of the object
+        
     }
 
     // Implement this function to make a custom header

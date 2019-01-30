@@ -46,7 +46,7 @@ public class TagsScriptableObject : ScriptableObject
 	// Awake is called when the script instance is being loaded
     private void Awake()
     {
-        Debug.Log("Tags Awake");
+        
     }
 	#endregion
 
@@ -90,5 +90,26 @@ public class Tag
     /// Color of this tag, used to render it in the editor.
     /// </summary>
     public Color Color = Color.grey;
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    /// Creates a new tag.
+    /// </summary>
+    /// <param name="_name">Name of the newly created tag.</param>
+    public Tag(string _name)
+    {
+        Name = _name;
+    }
+
+    /// Creates a new tag.
+    /// </summary>
+    /// <param name="_name">Name of the newly created tag.</param>
+    /// <param name="_color">Color of the tag, used to display it in the inspector.</param>
+    public Tag(string _name, Color _color)
+    {
+        Name = _name;
+        Color = _color;
+    }
     #endregion
 }
