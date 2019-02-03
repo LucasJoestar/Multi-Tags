@@ -93,7 +93,7 @@ public class GameObjectTagsEditor : Editor
 
         if (GUI.Button(_editButtonRect, "Edit Tags", EditorStyles.miniButtonRight))
         {
-            TagsEditor.CallWindow();
+            TagsEditorWindow.CallWindow();
         }
 
         EditorGUILayout.EndHorizontal();
