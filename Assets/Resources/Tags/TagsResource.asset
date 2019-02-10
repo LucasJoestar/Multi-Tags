@@ -12,13 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c39479f33b0b54c46bb58971f80805fd, type: 3}
   m_Name: TagsResource
   m_EditorClassIdentifier: 
-  Tags:
-  - Name: New Tag
-    Color: {r: 1, g: 1, b: 1, a: 1}
-  - Name: jfj
-    Color: {r: 1, g: 1, b: 1, a: 1}
-  - Name: dfh
-    Color: {r: 1, g: 1, b: 1, a: 1}
+  Tags: []
   UnityBuiltInTags:
   - Name: Untagged
     Color: {r: 1, g: 1, b: 1, a: 1}
