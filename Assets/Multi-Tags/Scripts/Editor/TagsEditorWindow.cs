@@ -144,6 +144,12 @@ public class TagsEditorWindow : EditorWindow
 
                 Rect _badgeRect = GUILayoutUtility.GetRect(new GUIContent(_tag.Name), EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
 
+                if (_badgeRect.xMax > Screen.width && _badgeRect.xMin > 15)
+                {
+                    //EditorGUILayout.BeginHorizontal();
+                    //EditorGUILayout.EndHorizontal();
+                }
+
                 // Creates the box for the whole tag area
                 GUI.Box(new Rect(_badgeRect.x, _badgeRect.y - 1, _badgeRect.width + 2, _badgeRect.height), string.Empty, _cnCountBadge);
 
