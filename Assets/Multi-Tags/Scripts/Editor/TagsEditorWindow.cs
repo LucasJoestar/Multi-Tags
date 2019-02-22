@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -14,8 +12,20 @@ public class TagsEditorWindow : EditorWindow
 	 *	###### PURPOSE ######
 	 *	#####################
 	 *
-	 *	    Editor window used to add and remove tags.
+	 *	    Editor window used to add, remove and personalize project tags.
 	 *
+     *	#####################
+	 *	####### TO DO #######
+	 *	#####################
+     * 
+     *      - Display in a cool way all project tags. For now, they are all in a single line,
+     *  but got to find a way to go to the next line when reaching the end of the screen.
+     *  Maybe with non-layout GUI...
+     *  
+     *      - Change the color of existing tags. That should be easy.
+     *      
+     *      - Change the name of created tags. That should be tricky.
+     * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
@@ -25,15 +35,14 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Changes :
 	 *
-	 *	    Added the CreateTag & RemoveTag method.
-     *	    Removed the Tags field.
-     *	    Adde the reference field ; and the Tags, UnityBuiltInTags & Reference properties.
-     *	    Changed the DrawTags method so Unity built-in tags & custom tags are now separated.
-     *	    Changed the CreateTagsAsset so that everything is directly done in the scriptable object awake.
-     *	    
-     *	Finally, tags can be created & removed from this window, and everything is fully saved on a scriptable object reference. Pretty cool, it is.
-     *	    Still, tags are not displayed the way I want to, so got to find a way to display them horizontally and automatically go to the line when reaching the end of the screen.
-     *	    Hard, it is. When trying to check this by rect size, 'got a weird error 'cause events Layout & Repaint have different informations.
+     *	    Finally, tags can be created & removed from this window, and everything is fully
+     *	saved on a scriptable object reference. Pretty cool, it is.
+     *	    Still, tags are not displayed the way I want to, so got to find a way to display them
+     *	horizontally and automatically go to the line when reaching the end of the screen.
+     *	    Hard, it is. When trying to check this by rect size, 'got a weird error 'cause events
+     *	Layout & Repaint have different informations.
+     *	
+     *	    At worst, can try with non-layout GUI.
 	 *
      *	-----------------------------------
      * 
@@ -42,8 +51,8 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Changes :
 	 *
-	 *	    Added the tagsSOPath & Tags fields ; and the GetTagsAsset property.
-     *	    Added the CreateTagsAsset, DrawTagsEditor, DrawToolbar & DrawTags methods.
+	 *	    The window loads & write dynamically project tags on a scriptable object in the
+     *	Resources folder. Plus, all of them are drawn on the window. Pretty cool.
      * 
 	 *	-----------------------------------
      * 
@@ -54,7 +63,8 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Creation of the TagsEditorWindow class.
      *	    
-     *	    Added the CallWindow method.
+     *	    The window can now be called from a Menu Toolbar button, and... That's it.
+     *	Yeah, I know...
 	 *
 	 *	-----------------------------------
 	*/
@@ -69,25 +79,25 @@ public class TagsEditorWindow : EditorWindow
     /// </summary>
     [SerializeField] private const string tagsSOPath = "Tags/TagsResource";
 
-    /// <summary>Shorthand to access reference <see cref="TagsScriptableObject.Tags"/>.</summary>
+    /// <summary>Shorthand to access reference <see cref="TagsSO.Tags"/>.</summary>
     public List<Tag> Tags
     {
         get { return Reference.Tags; }
     }
 
-    /// <summary>Shorthand to access reference <see cref="TagsScriptableObject.UnityBuiltInTags"/>.</summary>
+    /// <summary>Shorthand to access reference <see cref="TagsSO.UnityBuiltInTags"/>.</summary>
     public List<Tag> UnityBuiltInTags
     {
         get { return Reference.UnityBuiltInTags; }
     }
 
     /// <summary>Backing field for <see cref="Reference"/>.</summary>
-    private TagsScriptableObject reference = null;
+    private TagsSO reference = null;
 
     /// <summary>
     /// Scriptable object containing this project tags informations.
     /// </summary>
-    public TagsScriptableObject Reference
+    public TagsSO Reference
     {
         get
         {
@@ -100,9 +110,9 @@ public class TagsEditorWindow : EditorWindow
     /// <summary>
     /// Get the scriptable object containing all this project tags.
     /// </summary>
-    public TagsScriptableObject GetTagsAsset
+    public TagsSO GetTagsAsset
     {
-        get { return Resources.Load<TagsScriptableObject>(tagsSOPath); }
+        get { return Resources.Load<TagsSO>(tagsSOPath); }
     }
     #endregion
 
@@ -254,7 +264,7 @@ public class TagsEditorWindow : EditorWindow
     private void CreateTagsAsset()
     {
         // Creates the scriptable object to write
-        reference = CreateInstance<TagsScriptableObject>();
+        reference = CreateInstance<TagsSO>();
 
         // Creates the default folders & write the asset on disk
         Directory.CreateDirectory(Application.dataPath + "/Resources/" + Path.GetDirectoryName(tagsSOPath));
@@ -335,11 +345,9 @@ public class CreateTagWindow : EditorWindow
      *
      *	Creation of the CreateTagWindow class.
      *	    
-     *	    Added the tagName, color, isNameEmpty, doesNameAlreadyExist & doesNameContainSeparator fields.
-     *	    Added the SetBigSize & SetSmallSize methods.
-     *	    Implemented the OnEnable & OnGUI methods.
-     *	    
-     *	Well, it works correctly now.
+     *	    This is a little cool window that allow to create a new tag.
+     *	If the tag cannot be created, a little message indicates it to the user.
+     *	When created, the window closes by itself. And, it works fine.
      *
      *	-----------------------------------
     */
@@ -375,41 +383,14 @@ public class CreateTagWindow : EditorWindow
 
     #region Original Method
     /// <summary>
-    /// Set the window size as "big".
+    /// Draws this editor window content.
     /// </summary>
-    private void SetBigSize()
-    {
-        Vector2 _size = new Vector2(300, 95);
-        minSize = _size;
-        maxSize = _size;
-    }
-
-    /// <summary>
-    /// Set the window size as "small".
-    /// </summary>
-    private void SetSmallSize()
-    {
-        Vector2 _size = new Vector2(300, 50);
-        minSize = _size;
-        maxSize = _size;
-    }
-    #endregion
-
-    #region Unity Methods
-    // This function is called when the object is loaded
-    private void OnEnable()
-    {
-        SetSmallSize();
-        ShowUtility();
-    }
-
-    // Implement your own editor GUI here
-    private void OnGUI()
+    private void DrawEditor()
     {
         // If the name contains the tag separator, indicate it
         if (doesNameContainSeparator)
         {
-            EditorGUILayout.HelpBox("The name of the tag cannot contains \'" + MultiTagsUtility.TagSeparator + "\'", MessageType.Error);
+            EditorGUILayout.HelpBox("The name of the tag cannot contains \'" + MultiTags.TagSeparator + "\'", MessageType.Error);
         }
         // If the name is not valid, indicate it
         else if (doesNameAlreadyExist)
@@ -438,7 +419,7 @@ public class CreateTagWindow : EditorWindow
         if (GUILayout.Button("Create", EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
         {
             // If the new tag name entered contains the tag separator, indicate it and refuse to create the tag
-            if (tagName.Contains(MultiTagsUtility.TagSeparator))
+            if (tagName.Contains(MultiTags.TagSeparator))
             {
                 doesNameContainSeparator = true;
                 doesNameAlreadyExist = false;
@@ -487,6 +468,41 @@ public class CreateTagWindow : EditorWindow
             Close();
         }
         EditorGUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// Set the window size as "big".
+    /// </summary>
+    private void SetBigSize()
+    {
+        Vector2 _size = new Vector2(300, 95);
+        minSize = _size;
+        maxSize = _size;
+    }
+
+    /// <summary>
+    /// Set the window size as "small".
+    /// </summary>
+    private void SetSmallSize()
+    {
+        Vector2 _size = new Vector2(300, 50);
+        minSize = _size;
+        maxSize = _size;
+    }
+    #endregion
+
+    #region Unity Methods
+    // This function is called when the object is loaded
+    private void OnEnable()
+    {
+        SetSmallSize();
+        ShowUtility();
+    }
+
+    // Implement your own editor GUI here
+    private void OnGUI()
+    {
+        DrawEditor();
     }
     #endregion
 

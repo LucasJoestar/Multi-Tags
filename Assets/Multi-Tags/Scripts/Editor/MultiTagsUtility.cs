@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEditorInternal;
 
-public sealed class MultiTagsUtility
+public static class MultiTagsUtility
 {
     /* MultiTagsUtility :
 	 *
@@ -9,18 +9,34 @@ public sealed class MultiTagsUtility
 	 *	###### PURPOSE ######
 	 *	#####################
 	 *
-	 *	Stock utilities static methods around the multi-tags system in one script.
+	 *	Script to stock multiple utilities static members around the multi-tags system in one script.
 	 *
+     *	#####################
+	 *	####### TO DO #######
+	 *	#####################
+     * 
+     *      Well, wer's all alone here...
+     * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[22 / 02 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+	 *	    - Moved the Char variable used to separate tags to the newly created MultiTags class.
+	 *
+	 *	-----------------------------------
+     * 
      *	Date :			[03 / 02 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
 	 *	Changes :
 	 *
-	 *	    Added the AddTag & RemoveTag methods.
+	 *	    - We can now create and remove tags from the project with the
+     *	AddTag & RemoveTag methods.
 	 *
 	 *	-----------------------------------
      * 
@@ -31,18 +47,13 @@ public sealed class MultiTagsUtility
 	 *
 	 *	Creation of the MultiTagsUtility class.
      *	
-     *	    Added the static TagSeparator field.
-     *	    Added the static GetTags & GetUnityTags methods.
+     *	    - Added a Char variable used to separate tags witht he multi-tags system
+     *	from the Unity one.
+     *	    - Creation of methods to get all this project tags using the Unity system
+     *	or the multi one, witht he GetTags & GetUnityTags methods.
 	 *
 	 *	-----------------------------------
 	*/
-
-    #region Fields / Properties
-    /// <summary>
-    /// Separator used to separate tags in the original Unity tag system
-    /// </summary>
-    public static char TagSeparator = '|';
-    #endregion
 
     #region Methods
     /// <summary>
@@ -55,7 +66,7 @@ public sealed class MultiTagsUtility
     /// Get all this project tags, using the multi-tags system.
     /// </summary>
     /// <returns>Returns a string array of all tags, using the multi-tags system, of this proejct.</returns>
-    public static string[] GetTags() { return GetUnityTags().SelectMany(t => t.Split(TagSeparator)).ToArray(); }
+    public static string[] GetTags() { return GetUnityTags().SelectMany(t => t.Split(MultiTags.TagSeparator)).ToArray(); }
 
     /// <summary>
     /// Get all this project Unity tags.

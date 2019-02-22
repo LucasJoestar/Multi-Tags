@@ -1,25 +1,33 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(GameObject)), CanEditMultipleObjects]
-public class GameObjectTagsEditor : Editor
+public class GOTagsEditor : Editor
 {
-    /* GameObjectTagsEditor :
+    /* GOTagsEditor :
 	 *
 	 *	#####################
 	 *	###### PURPOSE ######
 	 *	#####################
 	 *
-	 *	    Customizes the inspector of the GameObject class to add a section for a custom tag system.
+	 *	    Customizes the inspector of the GameObject class to add a section for the
+     *	custom multi-tags system at the top of the components, just below the header.
 	 *
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[22 / 02 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+     *      ???
+	 *
+	 *	-----------------------------------
+     * 
 	 *	Date :			[20 / 01 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
@@ -39,53 +47,53 @@ public class GameObjectTagsEditor : Editor
      *	
      *	    To get all tags of the project, use : "UnityEditorInternal.InternalEditorUtility.tags".
      *	    
-     *	    Added the defaultEditor, isUnfolded & tagIcon fields.
-     *	    Added the DrawTagSystem method.
-     *	    Implemented OnDisable, OnEnable, OnHeaderGUI & OnInspectorGUI Unity methods.
+     *	    Created a simple editor with... almost nothing it it.
+     *	Added a header for Tags at the top left and a button at the top right of the editor
+     *	to open the Tags Editor Window.
 	 *
 	 *	-----------------------------------
 	*/
 
-
-
-    #region Events
-
-    #endregion
-
     #region Fields / Properties
+
+    #region Editor Variables
     /// <summary>
     /// Unity GameObject class built-in editor.
     /// </summary>
     private Editor defaultEditor;
 
     /// <summary>
-    /// Is the tag sector visible or not ?
+    /// All editing game objects.
+    /// </summary>
+    private GameObject[] targetGO = null;
+
+    /// <summary>
+    /// Is the tag editor visible or not ?
     /// </summary>
     private bool isUnfolded = true;
+    #endregion
 
+    #region Target Script(s) Variables
     /// <summary>
     /// Alls tags of this object.
     /// </summary>
     private List<Tag> objectTags = new List<Tag>();
+    #endregion
 
-    /// <summary>
-    /// Tag icon to display in the inspector.
-    /// </summary>
-    private Texture2D tagIcon = null;
     #endregion
 
     #region Methods
 
     #region Original Methods
     /// <summary>
-    /// Draws the custom tag system for game objects set in the <see cref="GameObjectTagsExtensions"/> script.
+    /// Draws an editor for the custom tag system for the GameObject class.
     /// </summary>
     private void DrawTagSystem()
     {
         EditorGUILayout.BeginHorizontal();
 
         // Title of the tag section
-        EditorGUILayout.LabelField(new GUIContent("Tags", tagIcon), EditorStyles.boldLabel);
+        EditorGUILayout.LabelField(new GUIContent("Tags"), EditorStyles.boldLabel);
 
         // Creates a button at the top right of the inspector to open the tags editor window
         // First, get its rect, then draw it
@@ -98,7 +106,7 @@ public class GameObjectTagsEditor : Editor
 
         EditorGUILayout.EndHorizontal();
 
-        // Draws the tags of editing objets.
+        // Draws the tags of editing objects.
         if (isUnfolded)
         {
 
@@ -124,19 +132,40 @@ public class GameObjectTagsEditor : Editor
 
         //MethodInfo disableMethod = defaultEditor.GetType().GetMethod("OnDisable", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
         //disableMethod?.Invoke(defaultEditor, null);
+
+        Debug.Log("Editor => Disable...");
     }
 
     // This function is called when the object is loaded
     void OnEnable()
     {
+        // Get editing objects as game objects
+        targetGO = new GameObject[targets.Length];
+
+        for (int _i = 0; _i < targets.Length; _i++)
+        {
+            targetGO[_i] = (GameObject)targets[_i];
+        }
+
         // When this inspector is created, also create the built-in inspector
         defaultEditor = CreateEditor(targets, Type.GetType("UnityEditor.GameObjectInspector, UnityEditor"));
 
-        // Load the tag icon
-        tagIcon = EditorGUIUtility.Load("Assets/Icons/Resources/tag.png") as Texture2D;
+        /* Get all tags of the editing object(s)
+         * 
+         * If editing only one object, get all its tags ;
+         * If performing multi-editing, get all tags in common between them
+        */
+        if (serializedObject.isEditingMultipleObjects)
+        {
+            // Get tags in common
+        }
+        else
+        {
+            // Get object tags
+            //objectTags = targetGO[0].GetTags();
+        }
 
-        // Get all tags of the object
-        
+        Debug.Log("Editor => Enable !");
     }
 
     // Implement this function to make a custom header
@@ -149,10 +178,8 @@ public class GameObjectTagsEditor : Editor
     // Implement this function to make a custom inspector
     public override void OnInspectorGUI()
     {
-        // Draw custom tag system
+        // Draws the custom multi-tags system, and then below it the default GameObject inspector
         DrawTagSystem();
-
-        // Draw the default Inspector
         defaultEditor.OnInspectorGUI();
     }
 	#endregion

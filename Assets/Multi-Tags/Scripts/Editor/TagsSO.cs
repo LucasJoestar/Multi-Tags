@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class TagsScriptableObject : ScriptableObject 
+public class TagsSO : ScriptableObject 
 {
-    /* TagsScriptableObject :
+    /* TagsSO :
 	 *
 	 *	#####################
 	 *	###### PURPOSE ######
@@ -14,6 +13,16 @@ public class TagsScriptableObject : ScriptableObject
 	 *
 	 *	    Scriptable object used to store all tags of a project, allowing the save & load them dynamically.
 	 *
+     *	#####################
+	 *	####### TO DO #######
+	 *	#####################
+     * 
+     *      - Get newly created tags using the Untiy System, so basically the same
+     *  that does the current Initialize method. Got to try with a coroutine doing things
+     *  one after the other with a minimum stuff by frame.
+     *  
+     *      ... Well, I think that's all I got to do.
+     * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
@@ -22,11 +31,8 @@ public class TagsScriptableObject : ScriptableObject
 	 *	Author :		[Guibert Lucas]
 	 *
 	 *	Changes :
-	 *
-	 *	    Added the UnityBuiltInTags & BuiltInTagsNames fields.
-     *	    Added the Initialize method.
      *	    
-     *	Now, the tags are fully loaded & set when this scriptable object is being loaded. That's really sweet.
+     *	    Now, the tags are fully loaded & set when this scriptable object is being loaded. That's really sweet.
      *	    You can copy this scriptable object from project to project, and all tags will be fully loaded. That's cool.
      *	    Oh, and the tags of the project not yet on this object are automatically added on load. Awesome, isn't it ?
 	 *
@@ -39,7 +45,7 @@ public class TagsScriptableObject : ScriptableObject
 	 *
 	 *	    Creation of the TagsScriptableObject class.
      *	    
-     *	    Added the Tags field.
+     *	    Base content, with only a list of Tag objects.
 	 *
 	 *	-----------------------------------
 	*/
@@ -56,7 +62,7 @@ public class TagsScriptableObject : ScriptableObject
     public List<Tag> UnityBuiltInTags = new List<Tag>();
 
     /// <summary>
-    /// Name of all Unity built-in tags
+    /// Name of all Unity built-in tags.
     /// </summary>
     public readonly string[] BuiltInTagsNames = new string[7] { "Untagged", "Respawn", "Finish", "EditorOnly", "MainCamera", "Player", "GameController" };
     #endregion
@@ -127,7 +133,7 @@ public class Tag
      *
      *	    Creation of the Tag class.
      *	    
-     *	    Added the Name & Color fields.
+     *	    This class Tag contain a name & an associated color.
      *
      *	-----------------------------------
     */
@@ -154,6 +160,7 @@ public class Tag
         Name = _name;
     }
 
+    /// <summary>
     /// Creates a new tag.
     /// </summary>
     /// <param name="_name">Name of the newly created tag.</param>

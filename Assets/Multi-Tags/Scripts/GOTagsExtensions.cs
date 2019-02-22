@@ -1,18 +1,26 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public static class GameObjectTagsExtensions 
+public static class GOTagsExtensions 
 {
-    /* GameObjectTagsExtensions :
+    /* GOTagsExtensions :
 	 *
 	 *	#####################
 	 *	###### PURPOSE ######
 	 *	#####################
 	 *
-	 *	    Make a custom multi-tags system using the Unity tag system.
+	 *	    Connect the Multi-tags system to the GameObject class with extension methods.
      *	    
-     *	    Add extension methods to split the tag of a game object to get all its tags, and way to check if the game object has a specific tag.
+     *	    Adds extension methods to the GameObject class to get all its tags from
+     *	the Unity system, and check if it has a certain tag.
 	 *
+     *	#####################
+	 *	####### TO DO #######
+	 *	#####################
+     * 
+     *      - What about methods allowing to dynamically add or remove tags
+     *  to a game object ? It would be cool !
+     * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
@@ -24,7 +32,9 @@ public static class GameObjectTagsExtensions
 	 *
 	 *	    Creation of the GameObjectTagsExtensions class.
      *	    
-     *	    Added the GetTags, HasTag & HasTags methods.
+     *	    - Added a method to access a game object tags with the GetTags method,
+     *	and to check if the object contain one or multiple tags using the
+     *	HasTag & HasTags methods.
 	 *
 	 *	-----------------------------------
 	*/
@@ -37,7 +47,7 @@ public static class GameObjectTagsExtensions
     /// <returns>Returns all this game object tags.</returns>
     public static string[] GetTags(this GameObject _go)
     {
-        return _go.tag.Split('|');
+        return _go.tag.Split(MultiTags.TagSeparator);
     }
 
     /// <summary>
