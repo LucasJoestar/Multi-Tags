@@ -9,7 +9,7 @@ public static class MultiTags
 	 *	###### PURPOSE ######
 	 *	#####################
 	 *
-	 *	script to reference everything needed from the Multi-Tags system in a static class.
+	 *	Script to reference everything needed from the Multi-Tags system in a static class.
 	 *
 	 *	#####################
 	 *	####### TO DO #######

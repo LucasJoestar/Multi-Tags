@@ -77,6 +77,7 @@ public class TagsSO : ScriptableObject
     {
         List<string> _projectTags = MultiTagsUtility.GetTags().ToList();
         string[] _referenceTags = Tags.Select(t => t.Name).ToArray();
+        string[] _referenceUnityTags = UnityBuiltInTags.Select(t => t.Name).ToArray();
 
         // Adds each tag of this scriptable object to the project in not having thel yet
         foreach (string _tag in _referenceTags)
@@ -94,7 +95,10 @@ public class TagsSO : ScriptableObject
         // Adds all tags of this project this object doesn't have to it
         foreach (string _tag in _projectTags)
         {
-            if (BuiltInTagsNames.Contains(_tag)) UnityBuiltInTags.Add(new Tag(_tag));
+            if (BuiltInTagsNames.Contains(_tag))
+            {
+                if (!_referenceUnityTags.Contains(_tag)) UnityBuiltInTags.Add(new Tag(_tag));
+            }
             else Tags.Add(new Tag(_tag));
         }
     }
