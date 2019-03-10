@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Scriptable object used to save and access to all tags of a project
+/// for the multi-tags system.
+/// </summary>
 public class TagsSO : ScriptableObject 
 {
     /* TagsSO :
@@ -16,17 +19,23 @@ public class TagsSO : ScriptableObject
      *	#####################
 	 *	####### TO DO #######
 	 *	#####################
-     * 
-     *      - Get newly created tags using the Untiy System, so basically the same
-     *  that does the current Initialize method. Got to try with a coroutine doing things
-     *  one after the other with a minimum stuff by frame.
      *  
-     *      ... Well, I think that's all I got to do.
+     *      ... Nothing to see here.
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[06 / 02 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+     *	    
+     *	    Object now get project tags missing from it and adds its own that the project doesn't have
+     *	regularly thanks to custom update in editor.
+	 *
+	 *	-----------------------------------
+     * 
      *	Date :			[03 / 02 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
@@ -43,7 +52,7 @@ public class TagsSO : ScriptableObject
 	 *
 	 *	Changes :
 	 *
-	 *	    Creation of the TagsScriptableObject class.
+	 *	Creation of the TagsScriptableObject class.
      *	    
      *	    Base content, with only a list of Tag objects.
 	 *
@@ -61,58 +70,86 @@ public class TagsSO : ScriptableObject
     /// </summary>
     public List<Tag> UnityBuiltInTags = new List<Tag>();
 
+    #if UNITY_EDITOR
     /// <summary>
-    /// Name of all Unity built-in tags.
+    /// Counter used to initialize project with object when reaching a certain value.
     /// </summary>
-    public readonly string[] BuiltInTagsNames = new string[7] { "Untagged", "Respawn", "Finish", "EditorOnly", "MainCamera", "Player", "GameController" };
+    private int initializeCounter = 0;
+    #endif
+
     #endregion
 
     #region Methods
 
     #region Original Methods
-    /// <summary>
-    /// Initializes this scriptable object with the project tags, and adds all tags this object contains to the project if not having them yet.
-    /// </summary>
-    public void Initialize()
-    {
-        List<string> _projectTags = MultiTagsUtility.GetTags().ToList();
-        string[] _referenceTags = Tags.Select(t => t.Name).ToArray();
-        string[] _referenceUnityTags = UnityBuiltInTags.Select(t => t.Name).ToArray();
 
-        // Adds each tag of this scriptable object to the project in not having thel yet
-        foreach (string _tag in _referenceTags)
+    #if UNITY_EDITOR
+    /// <summary>
+    /// Initializes the project tags with this object.
+    /// </summary>
+    private void Initialize()
+    {
+        // Initializes the project with this object
+        UnityEditor.Editor _thisEditor = UnityEditor.Editor.CreateEditor(this);
+
+        if (!_thisEditor)
         {
-            if (!_projectTags.Contains(_tag))
-            {
-                MultiTagsUtility.AddTag(_tag);
-            }
-            else
-            {
-                _projectTags.Remove(_tag);
-            }
+            return;
         }
 
-        // Adds all tags of this project this object doesn't have to it
-        foreach (string _tag in _projectTags)
+        _thisEditor.GetType().InvokeMember("Initialize", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public, null, _thisEditor, null);
+
+        // Destroy the created editor
+        DestroyImmediate(_thisEditor);
+    }
+
+    /// <summary>
+    /// Custom update of this object when in editor.
+    /// </summary>
+    private void EditorUpdate()
+    {
+        // Increase counter
+        initializeCounter++;
+
+        // When reaching a certain limit, initialize the project with the object
+        // and reset counter
+        if (initializeCounter > 500)
         {
-            if (BuiltInTagsNames.Contains(_tag))
-            {
-                if (!_referenceUnityTags.Contains(_tag)) UnityBuiltInTags.Add(new Tag(_tag));
-            }
-            else Tags.Add(new Tag(_tag));
+            Initialize();
+            initializeCounter = 0;
         }
     }
+    #endif
+
     #endregion
 
     #region Unity Methods
-    // Awake is called when the script instance is being loaded
-    private void Awake()
+    // This function is called when the scriptable object will be destroyed
+    private void OnDestroy()
     {
-        Initialize();
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.update -= EditorUpdate;
+        #endif
     }
-	#endregion
 
-	#endregion
+    // This function is called when the object is loaded
+    private void OnEnable()
+    {
+        #if UNITY_EDITOR
+        // In editor, intialize project with object on enable
+        // and do it every X times with custom update
+        UnityEditor.EditorApplication.update -= EditorUpdate;
+
+        if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            Initialize();
+            UnityEditor.EditorApplication.update += EditorUpdate;
+        }
+        #endif
+    }
+    #endregion
+
+    #endregion
 }
 
 [Serializable]

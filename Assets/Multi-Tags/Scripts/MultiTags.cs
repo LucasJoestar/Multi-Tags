@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Linq;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
+/// <summary>
+/// Class to access multiple methods around to multi-tags system not using editor.
+/// </summary>
 [Serializable]
 public static class MultiTags 
 {
@@ -38,12 +44,35 @@ public static class MultiTags
 
     #region Fields / Properties
     /// <summary>
+    /// Path of the scriptable object from the resources folder, containing all tags of the project.
+    /// </summary>
+    public const string TAGS_SO_PATH = "Tags/TagsResource";
+
+    /// <summary>
+    /// Name of all Unity built-in tags.
+    /// </summary>
+    public static readonly string[] BuiltInTagsNames = new string[7] { "Untagged", "Respawn", "Finish", "EditorOnly", "MainCamera", "Player", "GameController" };
+
+    /// <summary>
     /// Separator used to separate tags from the original Unity tag system.
     /// </summary>
     public static char TagSeparator = '|';
+
+    /// <summary>
+    /// Get the scriptable object containing all this project tags.
+    /// </summary>
+    public static TagsSO GetTagsAsset
+    {
+        get { return Resources.Load<TagsSO>(TAGS_SO_PATH); }
+    }
     #endregion
 
     #region Methods
-
+    /// <summary>
+    /// Returns the first game object found having a certain tag.
+    /// </summary>
+    /// <param name="_tag">Tag to search for.</param>
+    /// <returns>Returns first game object found having the tag, or null if none.</returns>
+    public static GameObject FindObjectWithTag(string _tag) { return Object.FindObjectsOfType<GameObject>().Where(g => g.GetTags().Contains(_tag)).FirstOrDefault(); }
     #endregion
 }

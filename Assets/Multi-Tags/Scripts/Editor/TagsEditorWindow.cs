@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
+/// <summary>
+/// Editor window to manages all this project tags.
+/// </summary>
 public class TagsEditorWindow : EditorWindow 
 {
     /* TagsEditorWindow :
@@ -12,24 +13,30 @@ public class TagsEditorWindow : EditorWindow
 	 *	###### PURPOSE ######
 	 *	#####################
 	 *
-	 *	    Editor window used to add, remove and personalize project tags.
+	 *	Editor window used to add, remove and personalize project tags.
 	 *
      *	#####################
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      - Display in a cool way all project tags. For now, they are all in a single line,
-     *  but got to find a way to go to the next line when reaching the end of the screen.
-     *  Maybe with non-layout GUI...
-     *  
-     *      - Change the color of existing tags. That should be easy.
+     *      • Search system for tags.
      *      
-     *      - Change the name of created tags. That should be tricky.
+     *      • Remove tag from all objects in loaded scene(s).
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[04 / 03 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+	 *	    Moved editor to the TagsEditor class for TagsSO custom editor.
+     *	Now, this window display the editor of the object.
+     * 
+	 *	-----------------------------------
+     * 
      *	Date :			[03 / 02 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
@@ -69,51 +76,14 @@ public class TagsEditorWindow : EditorWindow
 	 *	-----------------------------------
 	*/
 
-    #region Events
-
-    #endregion
-
     #region Fields / Properties
-    /// <summary>
-    /// Path of the scriptable object from the resources folder, containing all tags of the project.
-    /// </summary>
-    [SerializeField] private const string tagsSOPath = "Tags/TagsResource";
-
-    /// <summary>Shorthand to access reference <see cref="TagsSO.Tags"/>.</summary>
-    public List<Tag> Tags
-    {
-        get { return Reference.Tags; }
-    }
-
-    /// <summary>Shorthand to access reference <see cref="TagsSO.UnityBuiltInTags"/>.</summary>
-    public List<Tag> UnityBuiltInTags
-    {
-        get { return Reference.UnityBuiltInTags; }
-    }
-
     /// <summary>Backing field for <see cref="Reference"/>.</summary>
     private TagsSO reference = null;
 
     /// <summary>
-    /// Scriptable object containing this project tags informations.
+    /// Editor of the tags object reference.
     /// </summary>
-    public TagsSO Reference
-    {
-        get
-        {
-            if (!reference) CreateTagsAsset();
-            return reference;
-        }
-        private set { reference = value; }
-    }
-
-    /// <summary>
-    /// Get the scriptable object containing all this project tags.
-    /// </summary>
-    public TagsSO GetTagsAsset
-    {
-        get { return Resources.Load<TagsSO>(tagsSOPath); }
-    }
+    private TagsEditor referenceEditor = null;
     #endregion
 
     #region Methods
@@ -121,114 +91,6 @@ public class TagsEditorWindow : EditorWindow
     #region Original Methods
 
     #region Editor
-    /// <summary>
-    /// Displays the tags of the project.
-    /// </summary>
-    private void DrawTags()
-    {
-        // Creates & get variables
-        Color _originalColor = GUI.color;
-        Color _originalContentColor = GUI.contentColor;
-        GUIStyle _olMinus = new GUIStyle("OL Minus");
-        GUIStyle _cnCountBadge = new GUIStyle("CN CountBadge");
-        Vector2 _olMinusCaclSize = _olMinus.CalcSize(GUIContent.none);
-
-        // Draws a header
-        EditorGUILayout.LabelField("Unity built-in Tags", EditorStyles.boldLabel);
-
-        // If no tags, draws a information box and return
-        if (UnityBuiltInTags == null || UnityBuiltInTags.Count == 0)
-        {
-            EditorGUILayout.HelpBox("No built-in tag found on this project", MessageType.Info);
-        }
-        else
-        {
-            EditorGUILayout.BeginHorizontal();
-
-            // Draws Unity built-in tags
-            foreach (Tag _tag in UnityBuiltInTags)
-            {
-                GUI.color = _tag.Color;
-                if (GUI.color.grayscale > .5f) GUI.contentColor = Color.white;
-                else GUI.contentColor = Color.black;
-
-                Rect _badgeRect = GUILayoutUtility.GetRect(new GUIContent(_tag.Name), EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-
-                if (_badgeRect.xMax > Screen.width && _badgeRect.xMin > 15)
-                {
-                    //EditorGUILayout.BeginHorizontal();
-                    //EditorGUILayout.EndHorizontal();
-                }
-
-                // Creates the box for the whole tag area
-                GUI.Box(new Rect(_badgeRect.x, _badgeRect.y - 1, _badgeRect.width + 2, _badgeRect.height), string.Empty, _cnCountBadge);
-
-                // Label to display the tag name
-                GUI.Label(new Rect(_badgeRect.x + 1, _badgeRect.y, _badgeRect.width, _badgeRect.height), _tag.Name, EditorStyles.boldLabel);
-            }
-
-            EditorGUILayout.EndHorizontal();
-        }
-
-        // Draws a header
-        EditorGUILayout.LabelField("Custom Tags", EditorStyles.boldLabel);
-
-        // If no tags, draws a information box and return
-        if (Tags == null || Tags.Count == 0)
-        {
-            GUI.color = _originalColor;
-            GUI.contentColor = _originalContentColor;
-            EditorGUILayout.HelpBox("No tag found on this project. How about create a first one ?", MessageType.Info);
-            return;
-        }
-
-        EditorGUILayout.BeginHorizontal();
-
-        // Draws each tag with its associated color
-        foreach (Tag _tag in Tags)
-        {
-            GUI.color = _tag.Color;
-            if (GUI.color.grayscale > .5f) GUI.contentColor = Color.white;
-            else GUI.contentColor = Color.black;
-
-            Rect _labelRect = GUILayoutUtility.GetRect(new GUIContent(_tag.Name), EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-            Rect _badgeRect = new Rect(_labelRect.position, _labelRect.size + new Vector2(_olMinusCaclSize.x, 0));
-
-            // Creates the box for the whole tag area
-            GUI.Box(new Rect(_badgeRect.x, _badgeRect.y - 1, _badgeRect.width, _badgeRect.height), string.Empty, _cnCountBadge);
-
-            // Button to remove the tag from the game object
-            if (GUI.Button(new Rect(_badgeRect.position, _olMinusCaclSize), GUIContent.none, _olMinus))
-            {
-                RemoveTag(_tag);
-                Repaint();
-                return;
-            }
-
-            // Label to display the tag name
-            GUI.Label(new Rect(_labelRect.position + new Vector2(_olMinusCaclSize.x - 2, 0), _labelRect.size), _tag.Name, EditorStyles.boldLabel);
-
-            GUILayout.Space(_olMinusCaclSize.x);
-        }
-
-        GUI.color = _originalColor;
-        GUI.contentColor = _originalContentColor;
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.LabelField("This is the End...");
-    }
-
-    /// <summary>
-    /// Draws the multi-tags system editor.
-    /// </summary>
-    private void DrawTagsEditor()
-    {
-        // Draws a toolbar on the top of the window
-        DrawToolbar();
-
-        // Draw all project tags
-        DrawTags();
-    }
-
     /// <summary>
     /// Draws the toolbar on the top of the tags editor window.
     /// </summary>
@@ -239,47 +101,11 @@ public class TagsEditorWindow : EditorWindow
         // Draws a button to create a brand new cool tag
         if (GUILayout.Button("Create Tag", EditorStyles.toolbarButton))
         {
-            GetWindow<CreateTagWindow>("Create new Tag").Show();
+            GetWindow<CreateTagWindow>("Create new Tag").Show(this);
         }
 
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
-    }
-    #endregion
-
-    #region Tags
-    /// <summary>
-    /// Creates a brand new tag and add it to the project.
-    /// </summary>
-    /// <param name="_tag">New tag to add.</param>
-    public void CreateTag(Tag _tag)
-    {
-        MultiTagsUtility.AddTag(_tag.Name);
-        Tags.Add(_tag);
-    }
-
-    /// <summary>
-    /// Creates the tags scriptable object used to save & load project tags.
-    /// </summary>
-    private void CreateTagsAsset()
-    {
-        // Creates the scriptable object to write
-        reference = CreateInstance<TagsSO>();
-
-        // Creates the default folders & write the asset on disk
-        Directory.CreateDirectory(Application.dataPath + "/Resources/" + Path.GetDirectoryName(tagsSOPath));
-        AssetDatabase.CreateAsset(reference, "Assets/Resources/" + tagsSOPath + ".asset");
-        AssetDatabase.SaveAssets();
-    }
-
-    /// <summary>
-    /// Removes a tag from the project.
-    /// </summary>
-    /// <param name="_tag">Tag to remove</param>
-    public void RemoveTag(Tag _tag)
-    {
-        MultiTagsUtility.RemoveTag(_tag.Name);
-        Tags.Remove(_tag);
     }
     #endregion
 
@@ -302,28 +128,42 @@ public class TagsEditorWindow : EditorWindow
     // This function is called when the scriptable object goes out of scope
     private void OnDisable()
     {
-        
+        // Destroys the created editor
+        if (referenceEditor) DestroyImmediate(referenceEditor);
     }
 
     // This function is called when the object is loaded
     private void OnEnable()
     {
-        // Get the scriptable object of the project containing all tags and load them ;
-        // If not found, create it
-        reference = GetTagsAsset;
-        if (!reference) CreateTagsAsset();
+        // Get the scriptable object of the project containing all tags and load them
+        reference = MultiTagsUtility.GetTagsAsset();
+
+        // Creates editor for the reference
+        referenceEditor = (TagsEditor)Editor.CreateEditor(reference);
     }
 
     // Implement your own editor GUI here
     private void OnGUI()
     {
-        DrawTagsEditor();
+        if (!reference)
+        {
+            // Call the OnDisable & OnEnable methods to refresh window
+            OnDisable();
+            OnEnable();
+        }
+
+        // Draws tags editor
+        DrawToolbar();
+        referenceEditor.DrawTagsEditor();
     }
 	#endregion
 
 	#endregion
 }
 
+/// <summary>
+/// Editor window used to create a new tag.
+/// </summary>
 public class CreateTagWindow : EditorWindow
 {
     /* CreateTagWindow :
@@ -377,11 +217,22 @@ public class CreateTagWindow : EditorWindow
     /// Indicates if the name entered contains the tag separator or not.
     /// </summary>
     private bool doesNameContainSeparator = false;
+
+    /// <summary>
+    /// Reference editor creating tags for.
+    /// </summary>
+    private TagsEditor reference = null;
     #endregion
 
     #region Methods
 
     #region Original Method
+    /// <summary>
+    /// Initializes the window with an editor reference.
+    /// </summary>
+    /// <param name="_reference">Editor to create tag for.</param>
+    public void Show(TagsEditor _reference) => reference = _reference;
+
     /// <summary>
     /// Draws this editor window content.
     /// </summary>
@@ -464,7 +315,20 @@ public class CreateTagWindow : EditorWindow
             }
 
             // If everything is okay, create the new tag
-            TagsEditorWindow.CallWindow().CreateTag(new Tag(tagName, color));
+            if (reference)
+            {
+                reference.CreateTag(new Tag(tagName, color));
+            }
+            else
+            {
+                TagsSO _tagsSO = MultiTagsUtility.GetTagsAsset();
+
+                TagsEditor _editor = (TagsEditor)Editor.CreateEditor(_tagsSO);
+                _editor.CreateTag(new Tag(tagName, color));
+
+                DestroyImmediate(_editor);
+            }
+
             Close();
         }
         EditorGUILayout.EndHorizontal();
@@ -499,6 +363,85 @@ public class CreateTagWindow : EditorWindow
         ShowUtility();
     }
 
+    // Implement your own editor GUI here
+    private void OnGUI()
+    {
+        DrawEditor();
+    }
+    #endregion
+
+    #endregion
+}
+
+/// <summary>
+/// Editor window displayed when user do a context click on a tag.
+/// </summary>
+public class TagContextClikWindow : EditorWindow
+{
+    /* TagContextClikWindow :
+     *
+     *	#####################
+     *	###### PURPOSE ######
+     *	#####################
+     *
+     *	Editor window used to perform actions on a specific tag.
+     *
+     *	#####################
+     *	####### TO DO #######
+     *	#####################
+     * 
+     *      • ???
+     * 
+     *	#####################
+     *	### MODIFICATIONS ###
+     *	#####################
+     * 
+     *	Date :			[20 / 01 / 2019]
+     *	Author :		[Guibert Lucas]
+     *
+     *	Changes :
+     *
+     *	Creation of the TagContextClikWindow class.
+     *
+     *	-----------------------------------
+    */
+
+    #region Fields / Properties
+    /// <summary>
+    /// Tag used to perform actions on this window.
+    /// </summary>
+    public Tag Tag = null;
+    #endregion
+
+    #region Methods
+
+    #region Original Methods
+    /// <summary>
+    /// Initializes the window with a specific tag.
+    /// </summary>
+    /// <param name="_tag">Tag to initialize the window with.</param>
+    public static void CreateWindow(Tag _tag, Rect _position)
+    {
+        TagContextClikWindow _window = CreateInstance<TagContextClikWindow>();
+        _window.Tag = _tag;
+        _window.Show();
+    }
+
+    /// <summary>
+    /// Draws this window editor.
+    /// </summary>
+    private void DrawEditor()
+    {
+        GUIStyle _window = GUI.skin.window;
+        GUI.skin.window.onNormal.background = null;
+
+        Tag.Color = EditorGUILayout.ColorField(new GUIContent("Color", "Color of the \"" + Tag.Name + "\" Tag"), Tag.Color);
+
+        GUI.skin.window = _window;
+    }
+    #endregion
+
+    #region Unity Methods
     // Implement your own editor GUI here
     private void OnGUI()
     {

@@ -13,7 +13,19 @@ MonoBehaviour:
   m_Name: TagsResource
   m_EditorClassIdentifier: 
   Tags:
-  - Name: Big Bad Tag
+  - Name: New Tag
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Name: Test 1
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Name: Test 2
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Name: "Oui, tout \xE0 fait"
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Name: Test Tag 2
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Name: Hein
+    Color: {r: 1, g: 1, b: 1, a: 1}
+  - Name: Mhmm
     Color: {r: 1, g: 1, b: 1, a: 1}
   UnityBuiltInTags:
   - Name: Untagged

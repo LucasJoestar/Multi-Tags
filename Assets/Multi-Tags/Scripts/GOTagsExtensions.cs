@@ -1,6 +1,10 @@
 ﻿using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Class centralizing extension methods for the GameObject class
+/// around the multi-tags system.
+/// </summary>
 public static class GOTagsExtensions 
 {
     /* GOTagsExtensions :
