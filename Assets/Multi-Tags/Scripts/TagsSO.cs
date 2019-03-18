@@ -31,8 +31,8 @@ public class TagsSO : ScriptableObject
 	 *
 	 *	Changes :
      *	    
-     *	    Object now get project tags missing from it and adds its own that the project doesn't have
-     *	regularly thanks to custom update in editor.
+     *	    Object now get project tags missing from it and adds its own that
+     *	the project doesn't have regularly thanks to custom update in editor.
 	 *
 	 *	-----------------------------------
      * 

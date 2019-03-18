@@ -424,7 +424,9 @@ public class TagContextClikWindow : EditorWindow
     {
         TagContextClikWindow _window = CreateInstance<TagContextClikWindow>();
         _window.Tag = _tag;
-        _window.Show();
+        //_window.Show();
+
+        _window.ShowAsDropDown(_position, new Vector2(250, 30));
     }
 
     /// <summary>
@@ -446,6 +448,12 @@ public class TagContextClikWindow : EditorWindow
     private void OnGUI()
     {
         DrawEditor();
+    }
+
+    // Called when the window loses keyboard focus
+    private void OnLostFocus()
+    {
+        Close();
     }
     #endregion
 

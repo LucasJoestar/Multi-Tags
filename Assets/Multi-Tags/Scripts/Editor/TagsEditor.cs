@@ -29,14 +29,23 @@ public class TagsEditor : Editor
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[18 / 03 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+     *	    • Tags scriptable object is asset is now successfully entierly saved
+     *	when modified.
+     *	    
+	 *	-----------------------------------
+     * 
      *	Date :			[08 / 03 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
 	 *	Changes :
 	 *
-	 *	Creation of the TagsEditor class.
-     *	
      *	    • Project tags are now updated when removing a tag !
+     *	    
 	 *	-----------------------------------
      * 
 	 *	Date :			[04 / 03 / 2019]
@@ -155,6 +164,8 @@ public class TagsEditor : Editor
             }
             else tagsSO.Tags.Add(new Tag(_tag));
         }
+
+        SaveAsset();
     }
 
     /// <summary>
@@ -168,6 +179,8 @@ public class TagsEditor : Editor
         MultiTagsUtility.AddTag(_tag.Name);
         tagsSO.Tags.Add(_tag);
         tagsSO.Tags = tagsSO.Tags.OrderByDescending(t => t.Color.grayscale).ToList();
+
+        SaveAsset();
     }
 
     /// <summary>
@@ -201,6 +214,17 @@ public class TagsEditor : Editor
 
         // Remove tag from object
         tagsSO.Tags.Remove(_tag);
+
+        SaveAsset();
+    }
+
+    /// <summary>
+    /// Saves this asset.
+    /// </summary>
+    private void SaveAsset()
+    {
+        EditorUtility.SetDirty(target);
+        AssetDatabase.SaveAssets();
     }
     #endregion
 
