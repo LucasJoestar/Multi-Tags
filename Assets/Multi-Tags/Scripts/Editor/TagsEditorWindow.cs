@@ -422,6 +422,17 @@ public class TagContextClikWindow : EditorWindow
     /// <param name="_tag">Tag to initialize the window with.</param>
     public static void CreateWindow(Tag _tag, Rect _position)
     {
+        EditorWindow _colorPicker = (CreateInstance("ColorPicker") as EditorWindow);
+
+        //_colorPicker.GetType().InvokeMember("SetColor", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public, null, _colorPicker, new object[] { _tag.Color });
+
+        System.Reflection.MethodInfo _setColor = _colorPicker.GetType().GetMethod("SetColor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+
+        _setColor.Invoke(_colorPicker, new object[] { _tag.Color });
+
+
+        _colorPicker.Show();
+
         TagContextClikWindow _window = CreateInstance<TagContextClikWindow>();
         _window.Tag = _tag;
         //_window.Show();
@@ -453,7 +464,7 @@ public class TagContextClikWindow : EditorWindow
     // Called when the window loses keyboard focus
     private void OnLostFocus()
     {
-        Close();
+        //Close();
     }
     #endregion
 
