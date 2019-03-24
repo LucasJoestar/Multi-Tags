@@ -156,9 +156,16 @@ public class TagsEditorWindow : EditorWindow
         DrawToolbar();
         referenceEditor.DrawTagsEditor();
     }
-	#endregion
 
-	#endregion
+    // OnInspectorUpdate is called at 10 frames per second to give the inspector a chance to update
+    private void OnInspectorUpdate()
+    {
+        // Repaint the editor. This is necessary to display tags color when modifying them.
+        Repaint();
+    }
+    #endregion
+
+    #endregion
 }
 
 /// <summary>
@@ -367,104 +374,6 @@ public class CreateTagWindow : EditorWindow
     private void OnGUI()
     {
         DrawEditor();
-    }
-    #endregion
-
-    #endregion
-}
-
-/// <summary>
-/// Editor window displayed when user do a context click on a tag.
-/// </summary>
-public class TagContextClikWindow : EditorWindow
-{
-    /* TagContextClikWindow :
-     *
-     *	#####################
-     *	###### PURPOSE ######
-     *	#####################
-     *
-     *	Editor window used to perform actions on a specific tag.
-     *
-     *	#####################
-     *	####### TO DO #######
-     *	#####################
-     * 
-     *      • ???
-     * 
-     *	#####################
-     *	### MODIFICATIONS ###
-     *	#####################
-     * 
-     *	Date :			[20 / 01 / 2019]
-     *	Author :		[Guibert Lucas]
-     *
-     *	Changes :
-     *
-     *	Creation of the TagContextClikWindow class.
-     *
-     *	-----------------------------------
-    */
-
-    #region Fields / Properties
-    /// <summary>
-    /// Tag used to perform actions on this window.
-    /// </summary>
-    public Tag Tag = null;
-    #endregion
-
-    #region Methods
-
-    #region Original Methods
-    /// <summary>
-    /// Initializes the window with a specific tag.
-    /// </summary>
-    /// <param name="_tag">Tag to initialize the window with.</param>
-    public static void CreateWindow(Tag _tag, Rect _position)
-    {
-        EditorWindow _colorPicker = (CreateInstance("ColorPicker") as EditorWindow);
-
-        //_colorPicker.GetType().InvokeMember("SetColor", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public, null, _colorPicker, new object[] { _tag.Color });
-
-        System.Reflection.MethodInfo _setColor = _colorPicker.GetType().GetMethod("SetColor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-
-        _setColor.Invoke(_colorPicker, new object[] { _tag.Color });
-
-
-        _colorPicker.Show();
-
-        TagContextClikWindow _window = CreateInstance<TagContextClikWindow>();
-        _window.Tag = _tag;
-        //_window.Show();
-
-        _window.ShowAsDropDown(_position, new Vector2(250, 30));
-    }
-
-    /// <summary>
-    /// Draws this window editor.
-    /// </summary>
-    private void DrawEditor()
-    {
-        GUIStyle _window = GUI.skin.window;
-        GUI.skin.window.onNormal.background = null;
-
-        Tag.Color = EditorGUILayout.ColorField(new GUIContent("Color", "Color of the \"" + Tag.Name + "\" Tag"), Tag.Color);
-
-        GUI.skin.window = _window;
-    }
-    #endregion
-
-    #region Unity Methods
-    // Implement your own editor GUI here
-    private void OnGUI()
-    {
-        DrawEditor();
-    }
-
-    // Called when the window loses keyboard focus
-    private void OnLostFocus()
-    {
-        //Close();
     }
     #endregion
 

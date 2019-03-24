@@ -115,8 +115,6 @@ public class TagsEditor : Editor
                 return;
             }
         }
-
-        EditorGUILayout.LabelField("This is the End...");
     }
 
     /// <summary>

@@ -30,6 +30,20 @@ public static class MultiTagsUtility
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[24 / 03 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+	 *	    • Created a context menu on tag right click, allowing to change its color
+     *	with the ColorPicker class window.
+     *	
+     *	Source for this : https://github.com/Unity-Technologies/UnityCsReference/blob/2018.3/Editor/Mono/GUI/ColorPicker.cs
+     *	
+     *	    • Modified the Tag field to display the list of available tags to add in a popup.
+	 *
+	 *	-----------------------------------
+     * 
      *	Date :			[05 / 03 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
@@ -250,6 +264,9 @@ public static class MultiTagsUtility
     /// <param name="_tags">Tags to draw.</param>
     public static void DrawTags(Tag[] _tags)
     {
+        // Get current event
+        Event _event = Event.current;
+
         // Get CN Counter Badge style
         GUIStyle _cnCountBadge = new GUIStyle("CN CountBadge");
         GUIStyle _boldLabel = EditorStyles.boldLabel;
@@ -258,7 +275,6 @@ public static class MultiTagsUtility
 
         // Get original GUI colors
         Color _guiOriginalColor = GUI.color;
-        Color _guiContentOriginalColor = GUI.contentColor;
         Color _boldLabelOriginalColor = _boldLabel.normal.textColor;
 
         EditorGUILayout.BeginHorizontal();
@@ -294,8 +310,20 @@ public static class MultiTagsUtility
             // Creates the box for the whole tag area
             GUI.Box(new Rect(_badgeRect.x, _badgeRect.y - 1, _badgeRect.width + 2, _badgeRect.height), string.Empty, _cnCountBadge);
 
+            // Set GUI color as white to display tag name properly
+            GUI.color = Color.white;
+
             // Label to display the tag name
             GUI.Label(new Rect(_badgeRect.x + 4, _badgeRect.y, _badgeRect.width, _badgeRect.height), _tag.Name, _boldLabel);
+
+            // Create menu context on right click
+            if ((_event.type == EventType.ContextClick) && _badgeRect.Contains(_event.mousePosition))
+            {
+                GenericMenu _menu = new GenericMenu();
+                _menu.AddItem(new GUIContent("Change Color", "Change the color of this Tag"), false, ColorPickerMenu, _tag);
+
+                _menu.ShowAsContext();
+            }
         }
 
         EditorGUILayout.EndHorizontal();
@@ -305,7 +333,6 @@ public static class MultiTagsUtility
 
         // Set back original GUI colors
         GUI.color = _guiOriginalColor;
-        GUI.contentColor = _guiContentOriginalColor;
         _boldLabel.normal.textColor = _boldLabelOriginalColor;
     }
 
@@ -330,7 +357,6 @@ public static class MultiTagsUtility
 
         // Get original GUI colors
         Color _guiOriginalColor = GUI.color;
-        Color _guiContentOriginalColor = GUI.contentColor;
         Color _boldLabelOriginalColor = _boldLabel.normal.textColor;
 
         EditorGUILayout.BeginHorizontal();
@@ -378,6 +404,7 @@ public static class MultiTagsUtility
                 _hasClick = true;
             }
 
+            // Set GUI color as white to display tag name properly
             GUI.color = Color.white;
 
             // Label to display the tag name
@@ -388,7 +415,10 @@ public static class MultiTagsUtility
             // Create menu context on right click
             if ((_event.type == EventType.ContextClick) && _badgeRect.Contains(_event.mousePosition))
             {
-                TagContextClikWindow.CreateWindow(_tag, _badgeRect);
+                GenericMenu _menu = new GenericMenu();
+                _menu.AddItem(new GUIContent("Change Color", "Change the color of this Tag"), false, ColorPickerMenu, _tag);
+
+                _menu.ShowAsContext();
             }
         }
 
@@ -399,7 +429,6 @@ public static class MultiTagsUtility
 
         // Set back original GUI colors
         GUI.color = _guiOriginalColor;
-        GUI.contentColor = _guiContentOriginalColor;
         _boldLabel.normal.textColor = _boldLabelOriginalColor;
 
         return _hasClick;
@@ -408,11 +437,22 @@ public static class MultiTagsUtility
     /// <summary>
     /// Draws a tag field in the editor.
     /// </summary>
-    /// <param name="_text">Text to display in the tag field.</param>
+    /// <param name="_text">Index of the tag to display in the tag field.</param>
+    /// <param name="_notDisplayedTags">Tags to not display in the list of tags that can be added.</param>
     /// <param name="_callback">Method to call back when a tag is selected.</param>
     /// <returns>Returns new string value entered by the user in the field.</returns>
-    public static string TagField(string _text, Action<string> _callback)
+    public static int TagField(int _index, Tag[] _notDisplayedTags, Action<string> _callback)
     {
+        // Get all tags that can be added
+        string[] _allTags = GetTagsAsset().UnityBuiltInTags.Select(t => t.Name).Concat(GetTagsAsset().Tags.Select(t => t.Name)).Except(_notDisplayedTags.Select(t => t.Name)).ToArray();
+        _allTags[0] = "Select new Tag";
+
+        // Set index as last element index if exceeding array count
+        if (_index >= _allTags.Length) _index = _allTags.Length - 1;
+
+        // Get selected tag name
+        string _text = _allTags[_index];
+
         // Get CN Counter Badge & Ol Plus styles
         GUIStyle _cnCountBadge = new GUIStyle("CN CountBadge");
         GUIStyle _olPlus = new GUIStyle("OL Plus");
@@ -424,10 +464,10 @@ public static class MultiTagsUtility
         Rect _fieldRect = GUILayoutUtility.GetRect(new GUIContent(""), EditorStyles.boldLabel);
 
         // Get the x size of the text area, with a minmum value
-        float _xTextSize = EditorStyles.miniTextField.CalcSize(new GUIContent(_text)).x + 5;
+        float _xTextSize = EditorStyles.boldLabel.CalcSize(new GUIContent(_text)).x + 5;
         if (_xTextSize < 50) _xTextSize = 50;
 
-        Rect _textRect = new Rect(new Vector2(_fieldRect.position.x + 6, _fieldRect.position.y + 2), new Vector2(_xTextSize, _cnCounterBadgeCaclSize.y));
+        Rect _textRect = new Rect(new Vector2(_fieldRect.position.x + 6, _fieldRect.position.y + 1), new Vector2(_xTextSize, _cnCounterBadgeCaclSize.y));
         Rect _badgeRect = new Rect(_fieldRect.position, _textRect.size + new Vector2(_olMinusCaclSize.x + 8, 0));
 
         // Get if the given text does match to an existing tag name
@@ -435,7 +475,7 @@ public static class MultiTagsUtility
         Tag _tag = GetTag(_text);
 
         Color _originalColor = GUI.color;
-        GUI.color = (_text == string.Empty) ? Color.white : (_tag != null) ? Color.green : Color.red;
+        //GUI.color = (_text == _allTags[0]) ? Color.white : Color.green;
 
         // Creates the box for the whole tag area
         GUI.Box(new Rect(_badgeRect.x, _badgeRect.y - 1, _badgeRect.width, _badgeRect.height), string.Empty, _cnCountBadge);
@@ -444,7 +484,7 @@ public static class MultiTagsUtility
         GUI.color = _originalColor;
 
         // Text field to select a tag
-        _text = GUI.TextField(new Rect(_textRect.position, _textRect.size), _text, EditorStyles.miniTextField);
+        _index = EditorGUI.Popup(new Rect(_textRect.position, _textRect.size), _index, _allTags, EditorStyles.boldLabel);
 
         // Draw button right to the tag field to select it
         if (GUI.Button(new Rect(new Vector2(_badgeRect.position.x + _textRect.size.x + 6, _badgeRect.position.y), _olMinusCaclSize), GUIContent.none, _olPlus) && (_tag != null))
@@ -453,7 +493,7 @@ public static class MultiTagsUtility
             _text = string.Empty;
         }
 
-        return _text;
+        return _index;
     }
 
 
@@ -497,6 +537,26 @@ public static class MultiTagsUtility
 
             _object.tag = _newTag;
         }
+    }
+
+
+    /// <summary>
+    /// Generic Menu method. Show the color picker window to modify a color.
+    /// </summary>
+    /// <param name="_tag">Tag to modify color.</param>
+    public static void ColorPickerMenu(object _tag)
+    {
+        // Get the tag object
+        Tag _tagObject = _tag as Tag;
+
+        // Create delegate to set tag color
+        Action<Color> _action = new Action<Color>((Color _color) => _tagObject.Color = _color);
+
+        // Get the ColorPicker class
+        EditorWindow _colorPicker = ScriptableObject.CreateInstance("ColorPicker") as EditorWindow;
+
+        // Invoke color picker window
+        _colorPicker.GetType().InvokeMember("Show", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic, null, _colorPicker, new object[] { null, _action, _tagObject.Color, true, false });
     }
     #endregion
 }

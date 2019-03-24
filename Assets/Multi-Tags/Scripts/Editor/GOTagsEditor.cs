@@ -25,9 +25,6 @@ public class GOTagsEditor : Editor
 	 *	#####################
      * 
      *      • Create an auto-complete system for the tag field.
-     *      
-     *      • Set "Untagged" tag default one and automatically replace it,
-     *  and do not allow to remove it.
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -116,9 +113,9 @@ public class GOTagsEditor : Editor
     private string[] lastTags = new string[] { };
 
     /// <summary>
-    /// Text to display in the tag field, to add a new tag to the editing object(s).
+    /// Index of the tag to display in the tag field, to add a new tag to the editing object(s).
     /// </summary>
-    private string newTagName = string.Empty;
+    private int newTagIndex = 0;
 
     /// <summary>
     /// Indicates if editing targets do have different tags
@@ -170,18 +167,19 @@ public class GOTagsEditor : Editor
         if (isUnfolded)
         {
             // Draws a tag field, to add new tags to editing object(s)
-            newTagName = MultiTagsUtility.TagField(newTagName, AddTag);
+            newTagIndex = MultiTagsUtility.TagField(newTagIndex, objectTags.ToArray(), AddTag);
 
-            GUILayout.Space(5);
+            GUILayout.Space(15);
 
-            if (objectTags.Count > 0)
+            if ((objectTags.Count > 1) || ((objectTags.Count == 1) && (objectTags[0].Name != MultiTags.BuiltInTagsNames[0])))
             {
                 MultiTagsUtility.DrawTags(objectTags.ToArray(), RemoveTag);
             }
 
             if (haveTargetsDifferentTags)
             {
-                EditorGUILayout.HelpBox("Editing Game Objects have different tags, that are not displayed in the inspector.", MessageType.Info);
+                EditorGUILayout.HelpBox("You are editing Game Objects with different tags.\n" +
+                                        "Only tags in common will be displayed in the inspector.", MessageType.Info);
             }
         }
 
@@ -230,12 +228,21 @@ public class GOTagsEditor : Editor
         {
             if (!_gameObject.GetTags().Contains(_tagName))
             {
-                string _newTag = _gameObject.tag + MultiTags.TagSeparator + _tagName;
+                // If object is tag "Untagged", just tag it with the new one
+                if (_gameObject.tag == MultiTags.BuiltInTagsNames[0])
+                {
+                    _gameObject.tag = _tagName;
+                }
+                // Otherwise, create its new tag if necessary and set it
+                else
+                {
+                    string _newTag = _gameObject.tag + MultiTags.TagSeparator + _tagName;
 
-                // If new tag does not exist in the list of Unity tags, create it first
-                if (!MultiTagsUtility.GetUnityTags().Contains(_newTag)) MultiTagsUtility.AddTag(_newTag);
+                    // If new tag does not exist in the list of Unity tags, create it first
+                    if (!MultiTagsUtility.GetUnityTags().Contains(_newTag)) MultiTagsUtility.AddTag(_newTag);
 
-                _gameObject.tag = _newTag;
+                    _gameObject.tag = _newTag;
+                }
             }
         }
 

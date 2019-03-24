@@ -21,9 +21,9 @@ public static class MultiTags
 	 *	####### TO DO #######
 	 *	#####################
 	 *
-	 *	    - Get all project tags at runtime, wouldn't it be nice ?
+	 *	    • Get all project tags at runtime, wouldn't it be nice ?
      *	    
-     *      - Dynamically add or remove tags to the game in runtime ? That would be cool.
+     *      • Dynamically add or remove tags to the game in runtime ? That would be cool.
 	 *
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -36,7 +36,7 @@ public static class MultiTags
 	 *
 	 *	Creation of the MultiTags class.
      *	
-     *	    - Added a Char variable used to separate tags witht he multi-tags system
+     *	    • Added a Char variable used to separate tags witht he multi-tags system
      *	from the Unity one.
 	 *
 	 *	-----------------------------------
