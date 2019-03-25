@@ -490,7 +490,6 @@ public static class MultiTagsUtility
         if (GUI.Button(new Rect(new Vector2(_badgeRect.position.x + _textRect.size.x + 6, _badgeRect.position.y), _olMinusCaclSize), GUIContent.none, _olPlus) && (_tag != null))
         {
             _callback.Invoke(_text);
-            _text = string.Empty;
         }
 
         return _index;

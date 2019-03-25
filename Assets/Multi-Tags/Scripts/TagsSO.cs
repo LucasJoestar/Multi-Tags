@@ -113,7 +113,7 @@ public class TagsSO : ScriptableObject
 
         // When reaching a certain limit, initialize the project with the object
         // and reset counter
-        if (initializeCounter > 500)
+        if (initializeCounter > 10000)
         {
             Initialize();
             initializeCounter = 0;
@@ -145,71 +145,13 @@ public class TagsSO : ScriptableObject
             Initialize();
             UnityEditor.EditorApplication.update += EditorUpdate;
         }
+
+        // Initialize on editor quit
+        UnityEditor.EditorApplication.quitting -= Initialize;
+        UnityEditor.EditorApplication.quitting += Initialize;
         #endif
     }
     #endregion
 
-    #endregion
-}
-
-[Serializable]
-public class Tag
-{
-    /* Tag :
-     *
-     *	#####################
-     *	###### PURPOSE ######
-     *	#####################
-     *
-     *	    Class used to store a tag, with all its informations.
-     *
-     *	#####################
-     *	### MODIFICATIONS ###
-     *	#####################
-     *
-     *	Date :			[21 / 01 / 2019]
-     *	Author :		[Guibert Lucas]
-     *
-     *	Changes :
-     *
-     *	    Creation of the Tag class.
-     *	    
-     *	    This class Tag contain a name & an associated color.
-     *
-     *	-----------------------------------
-    */
-
-    #region Fields / Properties
-    /// <summary>
-    /// Name of this tag.
-    /// </summary>
-    public string Name = "New Tag";
-
-    /// <summary>
-    /// Color of this tag, used to render it in the editor.
-    /// </summary>
-    public Color Color = Color.white;
-    #endregion
-
-    #region Constructor
-    /// <summary>
-    /// Creates a new tag.
-    /// </summary>
-    /// <param name="_name">Name of the newly created tag.</param>
-    public Tag(string _name)
-    {
-        Name = _name;
-    }
-
-    /// <summary>
-    /// Creates a new tag.
-    /// </summary>
-    /// <param name="_name">Name of the newly created tag.</param>
-    /// <param name="_color">Color of the tag, used to display it in the inspector.</param>
-    public Tag(string _name, Color _color)
-    {
-        Name = _name;
-        Color = _color;
-    }
     #endregion
 }

@@ -76,3 +76,65 @@ public static class MultiTags
     public static GameObject FindObjectWithTag(string _tag) { return Object.FindObjectsOfType<GameObject>().Where(g => g.GetTags().Contains(_tag)).FirstOrDefault(); }
     #endregion
 }
+
+[Serializable]
+public class Tag
+{
+    /* Tag :
+     *
+     *	#####################
+     *	###### PURPOSE ######
+     *	#####################
+     *
+     *	    Class used to store a tag, with all its informations.
+     *
+     *	#####################
+     *	### MODIFICATIONS ###
+     *	#####################
+     *
+     *	Date :			[21 / 01 / 2019]
+     *	Author :		[Guibert Lucas]
+     *
+     *	Changes :
+     *
+     *	    Creation of the Tag class.
+     *	    
+     *	    This class Tag contain a name & an associated color.
+     *
+     *	-----------------------------------
+    */
+
+    #region Fields / Properties
+    /// <summary>
+    /// Name of this tag.
+    /// </summary>
+    public string Name = "New Tag";
+
+    /// <summary>
+    /// Color of this tag, used to render it in the editor.
+    /// </summary>
+    public Color Color = Color.white;
+    #endregion
+
+    #region Constructor
+    /// <summary>
+    /// Creates a new tag.
+    /// </summary>
+    /// <param name="_name">Name of the newly created tag.</param>
+    public Tag(string _name)
+    {
+        Name = _name;
+    }
+
+    /// <summary>
+    /// Creates a new tag.
+    /// </summary>
+    /// <param name="_name">Name of the newly created tag.</param>
+    /// <param name="_color">Color of the tag, used to display it in the inspector.</param>
+    public Tag(string _name, Color _color)
+    {
+        Name = _name;
+        Color = _color;
+    }
+    #endregion
+}

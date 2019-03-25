@@ -231,7 +231,7 @@ public class TagsEditor : Editor
     #region Unity Methods
     private void OnDisable()
     {
-        Debug.Log("Disable editor");
+        //Debug.Log("Disable editor");
     }
 
     // This function is called when the object is loaded
@@ -243,7 +243,7 @@ public class TagsEditor : Editor
         // Get editing object
         tagsSO = (TagsSO)target;
 
-        Debug.Log("Enable Editor");
+        //Debug.Log("Enable Editor");
     }
 
     // Implement this function to make a custom inspector
