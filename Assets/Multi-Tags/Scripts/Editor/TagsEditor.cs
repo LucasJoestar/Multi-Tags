@@ -229,6 +229,7 @@ public class TagsEditor : Editor
     #endregion
 
     #region Unity Methods
+    // This function is called when the scriptable object goes out of scope
     private void OnDisable()
     {
         //Debug.Log("Disable editor");

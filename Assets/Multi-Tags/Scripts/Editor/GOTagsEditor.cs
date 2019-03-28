@@ -286,8 +286,14 @@ public class GOTagsEditor : Editor
     #endregion
 
     #region Unity Methods
+    // This function is called when the scriptable object goes out of scope
+    private void OnDisable()
+    {
+        
+    }
+
     // This function is called when the object is loaded
-    void OnEnable()
+    private void OnEnable()
     {
         // Get editing objects as game objects
         targetGO = new GameObject[targets.Length];
