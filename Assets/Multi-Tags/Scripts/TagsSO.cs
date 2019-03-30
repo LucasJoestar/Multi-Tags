@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -61,6 +62,11 @@ public class TagsSO : ScriptableObject
 
     #region Fields / Properties
     /// <summary>
+    /// All this project tags.
+    /// </summary>
+    public Tag[] AllTags { get { return Tags.Concat(UnityBuiltInTags).ToArray(); } }
+
+    /// <summary>
     /// All custom tags of this project.
     /// </summary>
     public List<Tag> Tags = new List<Tag>();
@@ -83,6 +89,7 @@ public class TagsSO : ScriptableObject
 
     #region Original Methods
 
+    #region Unity Editor
     #if UNITY_EDITOR
     /// <summary>
     /// Initializes the project tags with this object.
@@ -120,6 +127,7 @@ public class TagsSO : ScriptableObject
         }
     }
     #endif
+    #endregion
 
     #endregion
 

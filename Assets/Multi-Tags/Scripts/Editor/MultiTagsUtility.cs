@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -30,6 +29,15 @@ public static class MultiTagsUtility
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[30 / 03 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+	 *	    Removed some useless methods that now have an equivalent in the MultiTags class.
+	 *
+	 *	-----------------------------------
+     * 
      *	Date :			[24 / 03 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
@@ -91,20 +99,28 @@ public static class MultiTagsUtility
 
     #region Methods
     /// <summary>
-    /// Adds a tag to this Unity project.
+    /// Creates and add a tag to this Unity project.
     /// </summary>
-    /// <param name="_tag">New tag to add.</param>
-    public static void AddTag(string _tag) => InternalEditorUtility.AddTag(_tag);
+    /// <param name="_tag">New tag to create.</param>
+    public static void CreateTag(string _tag) => InternalEditorUtility.AddTag(_tag);
 
     /// <summary>
-    /// Removes a tag from this Unity project.
+    /// Destroy and remove a tag from this Unity project.
     /// </summary>
-    /// <param name="_tag">Tag to remove.</param>
-    public static void RemoveTag(string _tag) => InternalEditorUtility.RemoveTag(_tag);
+    /// <param name="_tag">Tag to destroy.</param>
+    public static void DestroyTag(string _tag) => InternalEditorUtility.RemoveTag(_tag);
 
 
     /// <summary>
-    /// Get the scriptable object containing all this project tags.
+    /// Check if the scriptable object containing all this project tags exist ; if not, create it.
+    /// </summary>
+    public static void CheckTagsAsset()
+    {
+        if (!Resources.Load<TagsSO>(MultiTags.TAGS_SO_PATH)) CreateTagsAsset();
+    }
+
+    /// <summary>
+    /// Get the scriptable object containing all this project tags. If none, create it.
     /// </summary>
     public static TagsSO GetTagsAsset()
     {
@@ -131,132 +147,22 @@ public static class MultiTagsUtility
 
 
     /// <summary>
-    /// Get all this project tags, using the multi-tags system.
+    /// Get all this project tags from Unity, using the multi-tags system.
     /// </summary>
-    /// <returns>Returns a string array of all tags, using the multi-tags system, of this proejct.</returns>
-    public static string[] GetTags() { return GetUnityTags().SelectMany(t => t.Split(MultiTags.TagSeparator)).Distinct().ToArray(); }
-
-    /// <summary>
-    /// Get all tags of a game object.
-    /// </summary>
-    /// <param name="_gameObject">Game object to get tags from.</param>
-    /// <returns>Returns an array of all tags from this game object.</returns>
-    public static Tag[] GetTags(GameObject _gameObject)
+    /// <returns>Returns a string array of all tags, using the multi-tags system, of this projrct.</returns>
+    public static string[] GetProjectTags()
     {
-        // Get scriptable object containing all project tags
-        TagsSO _source = GetTagsAsset();
-
-        // Get game object tags
-        List<string> _gameObjectTags = _gameObject.GetTags().ToList();
-        List<Tag> _tags = new List<Tag>();
-
-        // Get tags from custom tags
-        foreach (Tag _tag in _source.Tags)
-        {
-            if (_gameObjectTags.Contains(_tag.Name))
-            {
-                _tags.Add(_tag);
-                _gameObjectTags.Remove(_tag.Name);
-
-                if (_gameObjectTags.Count == 0) break;
-            }
-        }
-
-        // Get tags from Unity built-in tags
-        if (_gameObjectTags.Count > 0)
-        {
-            foreach (Tag _tag in _source.UnityBuiltInTags)
-            {
-                if (_gameObjectTags.Contains(_tag.Name))
-                {
-                    _tags.Add(_tag);
-                    _gameObjectTags.Remove(_tag.Name);
-
-                    if (_gameObjectTags.Count == 0) break;
-                }
-            }
-        }
-
-        // Return object tags
-        return _tags.ToArray();
-    }
-
-    /// <summary>
-    /// Get a Tag object from an given tag name.
-    /// </summary>
-    /// <param name="_tagName">Tag name to get Tag object from.</param>
-    /// <returns>Returns the Tag object from this tag name.</returns>
-    public static Tag GetTag(string _tagName)
-    {
-        // Get scriptable object containing all project tags
-        TagsSO _source = GetTagsAsset();
-
-        // Try to get corresponding tag from custom tags
-        foreach (Tag _tag in _source.Tags)
-        {
-            if (_tagName == _tag.Name) return _tag;
-        }
-
-        // Try to get corresponding tag from built-in tags
-        foreach (Tag _tag in _source.UnityBuiltInTags)
-        {
-            if (_tagName == _tag.Name) return _tag;
-        }
-
-        // Return given tag does not exist, return null
-        return null;
-    }
-
-    /// <summary>
-    /// Get all Tag objects from an array of tag names.
-    /// </summary>
-    /// <param name="_tagNames">Tag names to get Tag objects from.</param>
-    /// <returns>Returns an array of all Tag objects from these tag names.</returns>
-    public static Tag[] GetTags(string[] _tagNames)
-    {
-        // Get scriptable object containing all project tags
-        TagsSO _source = GetTagsAsset();
-
-        List<Tag> _tags = new List<Tag>();
-        List<string> _tagsNamesList = _tagNames.ToList();
-
-        // Get tags from custom tags
-        foreach (Tag _tag in _source.Tags)
-        {
-            if (_tagNames.Contains(_tag.Name))
-            {
-                _tags.Add(_tag);
-                _tagsNamesList.Remove(_tag.Name);
-
-                if (_tagsNamesList.Count == 0) break;
-            }
-        }
-
-        // Get tags from Unity built-in tags
-        if (_tagsNamesList.Count > 0)
-        {
-            foreach (Tag _tag in _source.UnityBuiltInTags)
-            {
-                if (_tagNames.Contains(_tag.Name))
-                {
-                    _tags.Add(_tag);
-                    _tagsNamesList.Remove(_tag.Name);
-
-                    if (_tagsNamesList.Count == 0) break;
-                }
-            }
-        }
-
-        // Return object tags
-        return _tags.ToArray();
+        return GetUnityTags().SelectMany(t => t.Split(MultiTags.TAG_SEPARATOR)).Distinct().ToArray();
     }
 
     /// <summary>
     /// Get all this project Unity tags.
     /// </summary>
-    /// <returns>Returns a string array of all Unity tags from this project.</returns>
+    /// <returns>Returns a string array of all Unity tags from this project, without using multi-tags system.</returns>
     public static string[] GetUnityTags() { return InternalEditorUtility.tags; }
 
+
+    // SECTION TO REMOVE ?
 
     /// <summary>
     /// Call this method to draw tags in an editor.
@@ -472,7 +378,7 @@ public static class MultiTagsUtility
 
         // Get if the given text does match to an existing tag name
         // If so, draw the field in green color, or in red in no tag with such name is found
-        Tag _tag = GetTag(_text);
+        Tag _tag = MultiTags.GetTag(_text);
 
         Color _originalColor = GUI.color;
         //GUI.color = (_text == _allTags[0]) ? Color.white : Color.green;
@@ -513,11 +419,11 @@ public static class MultiTagsUtility
 
             if (_object.tag != _tagName)
             {
-                if (_object.tag.Contains(MultiTags.TagSeparator + _tagName + MultiTags.TagSeparator))
+                if (_object.tag.Contains(MultiTags.TAG_SEPARATOR + _tagName + MultiTags.TAG_SEPARATOR))
                 {
-                    _newTag = _object.tag.Replace(MultiTags.TagSeparator + _tagName + MultiTags.TagSeparator, MultiTags.TagSeparator.ToString());
+                    _newTag = _object.tag.Replace(MultiTags.TAG_SEPARATOR + _tagName + MultiTags.TAG_SEPARATOR, MultiTags.TAG_SEPARATOR.ToString());
                 }
-                else if (_object.tag.Substring(0, _tagName.Length + 1) == _tagName + MultiTags.TagSeparator)
+                else if (_object.tag.Substring(0, _tagName.Length + 1) == _tagName + MultiTags.TAG_SEPARATOR)
                 {
                     _newTag = _object.tag.Remove(0, _tagName.Length + 1);
                 }
@@ -532,7 +438,7 @@ public static class MultiTagsUtility
             }
 
             // If new tag does not exist in the list of Unity tags, create it first
-            if (!GetUnityTags().Contains(_newTag)) AddTag(_newTag);
+            if (!GetUnityTags().Contains(_newTag)) CreateTag(_newTag);
 
             _object.tag = _newTag;
         }
@@ -557,5 +463,115 @@ public static class MultiTagsUtility
         // Invoke color picker window
         _colorPicker.GetType().InvokeMember("Show", System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic, null, _colorPicker, new object[] { null, _action, _tagObject.Color, true, false });
     }
+    #endregion
+}
+
+/// <summary>
+/// Custom property drawer for the Tag class.
+/// </summary>
+[CustomPropertyDrawer(typeof(Tag))]
+public class TagDrawer : PropertyDrawer
+{
+    /* TagDrawer :
+     * 
+     *	#####################
+	 *	###### PURPOSE ######
+	 *	#####################
+	 *
+	 *	[PURPOSE]
+	 *
+	 *	#####################
+	 *	### MODIFICATIONS ###
+	 *	#####################
+     * 
+	 *	Date :			[DATE]
+	 *	Author :		[NAME]
+	 *
+	 *	Changes :
+	 *
+     *      [CHANGES]
+	 *
+	 *	-----------------------------------
+    */
+
+    #region Fields / Properties
+
+    #endregion
+
+    #region Methods
+
+    #region Original Methods
+
+    #endregion
+
+    #region Unity Methods
+    // Override this method to specify how tall the GUI for this field is in pixels
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return base.GetPropertyHeight(property, label);
+    }
+
+    // Override this method to make your own GUI for the property.
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        base.OnGUI(position, property, label);
+    }
+    #endregion
+
+    #endregion
+}
+
+/// <summary>
+/// Custom property drawer for the Tags class.
+/// </summary>
+[CustomPropertyDrawer(typeof(Tags))]
+public class TagsDrawer : PropertyDrawer
+{
+    /* TagsDrawer :
+     * 
+     *	#####################
+	 *	###### PURPOSE ######
+	 *	#####################
+	 *
+	 *	[PURPOSE]
+	 *
+	 *	#####################
+	 *	### MODIFICATIONS ###
+	 *	#####################
+     * 
+	 *	Date :			[DATE]
+	 *	Author :		[NAME]
+	 *
+	 *	Changes :
+	 *
+     *      [CHANGES]
+	 *
+	 *	-----------------------------------
+    */
+
+    #region Fields / Properties
+
+    #endregion
+
+    #region Methods
+
+    #region Original Methods
+
+    #endregion
+
+    #region Unity Methods
+    // Override this method to specify how tall the GUI for this field is in pixels
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        return base.GetPropertyHeight(property, label);
+    }
+
+    // Override this method to make your own GUI for the property.
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        base.OnGUI(position, property, label);
+    }
+    #endregion
+
     #endregion
 }

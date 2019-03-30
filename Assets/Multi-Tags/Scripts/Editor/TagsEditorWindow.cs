@@ -248,7 +248,7 @@ public class CreateTagWindow : EditorWindow
         // If the name contains the tag separator, indicate it
         if (doesNameContainSeparator)
         {
-            EditorGUILayout.HelpBox("The name of the tag cannot contains \'" + MultiTags.TagSeparator + "\'", MessageType.Error);
+            EditorGUILayout.HelpBox("The name of the tag cannot contains \'" + MultiTags.TAG_SEPARATOR + "\'", MessageType.Error);
         }
         // If the name is not valid, indicate it
         else if (doesNameAlreadyExist)
@@ -277,7 +277,7 @@ public class CreateTagWindow : EditorWindow
         if (GUILayout.Button("Create", EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
         {
             // If the new tag name entered contains the tag separator, indicate it and refuse to create the tag
-            if (tagName.Contains(MultiTags.TagSeparator))
+            if (tagName.Contains(MultiTags.TAG_SEPARATOR))
             {
                 doesNameContainSeparator = true;
                 doesNameAlreadyExist = false;

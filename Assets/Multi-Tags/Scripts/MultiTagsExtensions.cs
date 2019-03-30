@@ -2,10 +2,9 @@
 using UnityEngine;
 
 /// <summary>
-/// Class centralizing extension methods for the GameObject class
-/// around the multi-tags system.
+/// Class centralizing extension methods around the multi-tags system.
 /// </summary>
-public static class GOTagsExtensions 
+public static class MultiTagsExtensions 
 {
     /* GOTagsExtensions :
 	 *
@@ -43,7 +42,7 @@ public static class GOTagsExtensions
 	 *	-----------------------------------
 	*/
 
-    #region Methods
+    #region GameObject
     /// <summary>
     /// Get all this game object tags.
     /// </summary>
@@ -51,8 +50,19 @@ public static class GOTagsExtensions
     /// <returns>Returns all this game object tags.</returns>
     public static string[] GetTags(this GameObject _go)
     {
-        return _go.tag.Split(MultiTags.TagSeparator);
+        return _go.tag.Split(MultiTags.TAG_SEPARATOR);
     }
+
+    /// <summary>
+    /// Get a Tags object from all this game object tags.
+    /// </summary>
+    /// <param name="_go">Game object to get tags from.</param>
+    /// <returns>Returns a Tags object from all this game object tags.</returns>
+    public static Tags GetTagsObject(this GameObject _go)
+    {
+        return MultiTags.GetTags(_go.GetTags());
+    }
+
 
     /// <summary>
     /// Does this game object has a specific tag ?
@@ -86,5 +96,9 @@ public static class GOTagsExtensions
     {
         return !_go.GetTags().Except(_tags).Any();
     }
+    #endregion
+
+    #region GUI
+
     #endregion
 }

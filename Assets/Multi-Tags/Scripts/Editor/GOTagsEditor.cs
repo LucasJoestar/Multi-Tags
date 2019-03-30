@@ -199,7 +199,7 @@ public class GOTagsEditor : Editor
         if (serializedObject.isEditingMultipleObjects && targetGO.Select(t => t.tag).Any(t => t != targetGO[0].tag))
         {
             lastTags = targetGO.Select(g => g.tag).ToArray();
-            objectTags = MultiTagsUtility.GetTags(targetGO.Select(t => t.GetTags()).Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToArray())).ToList();
+            objectTags = MultiTags.GetTags(targetGO.Select(t => t.GetTags()).Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToArray())).ObjectTags.ToList();
 
             haveTargetsDifferentTags = true;
         }
@@ -208,7 +208,7 @@ public class GOTagsEditor : Editor
         {
             // Get editing object tags
             lastTags = new string[1] { targetGO[0].tag };
-            objectTags = MultiTagsUtility.GetTags(targetGO[0]).ToList();
+            objectTags = targetGO[0].GetTagsObject().ObjectTags.ToList();
 
             haveTargetsDifferentTags = false;
         }
@@ -236,10 +236,10 @@ public class GOTagsEditor : Editor
                 // Otherwise, create its new tag if necessary and set it
                 else
                 {
-                    string _newTag = _gameObject.tag + MultiTags.TagSeparator + _tagName;
+                    string _newTag = _gameObject.tag + MultiTags.TAG_SEPARATOR + _tagName;
 
                     // If new tag does not exist in the list of Unity tags, create it first
-                    if (!MultiTagsUtility.GetUnityTags().Contains(_newTag)) MultiTagsUtility.AddTag(_newTag);
+                    if (!MultiTagsUtility.GetUnityTags().Contains(_newTag)) MultiTagsUtility.CreateTag(_newTag);
 
                     _gameObject.tag = _newTag;
                 }
@@ -258,7 +258,7 @@ public class GOTagsEditor : Editor
     {
         Undo.RecordObjects(targets, "Game Object(s) Remove Tag \"" + _tag.Name + "\"");
 
-        string[] _previousTags = targetGO.Where(g => g.tag.Contains(MultiTags.TagSeparator)).Select(g => g.tag).Distinct().ToArray();
+        string[] _previousTags = targetGO.Where(g => g.tag.Contains(MultiTags.TAG_SEPARATOR)).Select(g => g.tag).Distinct().ToArray();
 
         // Remove tag from editing objects
         MultiTagsUtility.RemoveTagFromGameObjects(_tag.Name, targetGO);
@@ -279,7 +279,7 @@ public class GOTagsEditor : Editor
         {
             if ((_tag != string.Empty) && !MultiTags.BuiltInTagsNames.Contains(_tag) && (!Resources.FindObjectsOfTypeAll<GameObject>().Where(g => g.tag == _tag).FirstOrDefault()))
             {
-                MultiTagsUtility.RemoveTag(_tag);
+                MultiTagsUtility.DestroyTag(_tag);
             }
         }
     }

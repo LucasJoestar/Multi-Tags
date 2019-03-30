@@ -134,7 +134,7 @@ public class TagsEditor : Editor
     public void Initialize()
     {
         List<string> _projectTags = MultiTagsUtility.GetUnityTags().ToList();
-        List<string> _projectMultiTags = _projectTags.SelectMany(t => t.Split(MultiTags.TagSeparator)).Distinct().ToList();
+        List<string> _projectMultiTags = _projectTags.SelectMany(t => t.Split(MultiTags.TAG_SEPARATOR)).Distinct().ToList();
         string[] _referenceTags = tagsSO.Tags.Select(t => t.Name).ToArray();
         string[] _referenceUnityTags = tagsSO.UnityBuiltInTags.Select(t => t.Name).ToArray();
 
@@ -143,7 +143,7 @@ public class TagsEditor : Editor
         {
             if (!_projectTags.Contains(_tag))
             {
-                MultiTagsUtility.AddTag(_tag);
+                MultiTagsUtility.CreateTag(_tag);
             }
             else
             {
@@ -174,7 +174,7 @@ public class TagsEditor : Editor
     {
         Undo.RecordObject(target, "Tag \"" + _tag.Name + "\" Creation");
 
-        MultiTagsUtility.AddTag(_tag.Name);
+        MultiTagsUtility.CreateTag(_tag.Name);
         tagsSO.Tags.Add(_tag);
         tagsSO.Tags = tagsSO.Tags.OrderByDescending(t => t.Color.grayscale).ToList();
 
@@ -208,7 +208,7 @@ public class TagsEditor : Editor
         MultiTagsUtility.RemoveTagFromGameObjects(_tag.Name, _allObjectsWithTag);
 
         // Remove all Unity tags containing this tag
-        MultiTagsUtility.GetUnityTags().Where(t => t.Split(MultiTags.TagSeparator).Contains(_tag.Name)).ToList().ForEach(t => MultiTagsUtility.RemoveTag(t));
+        MultiTagsUtility.GetUnityTags().Where(t => t.Split(MultiTags.TAG_SEPARATOR).Contains(_tag.Name)).ToList().ForEach(t => MultiTagsUtility.DestroyTag(t));
 
         // Remove tag from object
         tagsSO.Tags.Remove(_tag);
