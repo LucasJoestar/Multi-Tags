@@ -24,7 +24,7 @@ public class GOTagsEditor : Editor
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      • Create an auto-complete system for the tag field.
+     *      Mhmm, I wonder what for...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -59,7 +59,7 @@ public class GOTagsEditor : Editor
 	 *
 	 *	Changes :
 	 *
-     *      Editor now display all tags from the first editing object in the inspector.
+     *      • Editor now display all tags from the first editing object in the inspector.
 	 *
 	 *	-----------------------------------
      * 
@@ -70,9 +70,9 @@ public class GOTagsEditor : Editor
 	 *
      *      Creation of the GameObjectTagsEditor.
      * 
-	 *	    Researches. A lot, of researches.
+	 *	    • Researches. A lot, of researches.
      *	    
-     *	    Finally, get to know how to draw it, thanks to these guys :
+     *	    • Finally, get to know how to draw it, thanks to these guys :
      *	            - https://forum.unity.com/threads/custom-inspector-default-header-for-scriptableobjects.544276/
      *	            - https://forum.unity.com/threads/extending-instead-of-replacing-built-in-inspectors.407612/
      *	            
@@ -80,10 +80,11 @@ public class GOTagsEditor : Editor
      *	But warning ! Got a lot of errors when calling the OnDisable method of the editor, so removed it ;
      *	Got also sometime an error when destroying the editor, so maybe this will be removed.
      *	
-     *	    To get all tags of the project, use : "UnityEditorInternal.InternalEditorUtility.tags".
+     *	    • To get all tags of the project, use : "UnityEditorInternal.InternalEditorUtility.tags".
      *	    
-     *	    Created a simple editor with... almost nothing it it.
-     *	Added a header for Tags at the top left and a button at the top right of the editor
+     *	    • Created a simple editor with... almost nothing it it.
+     *	    
+     *	    • Added a header for Tags at the top left and a button at the top right of the editor
      *	to open the Tags Editor Window.
 	 *
 	 *	-----------------------------------

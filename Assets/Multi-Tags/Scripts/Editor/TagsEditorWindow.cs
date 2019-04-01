@@ -20,8 +20,6 @@ public class TagsEditorWindow : EditorWindow
 	 *	#####################
      * 
      *      • Search system for tags.
-     *      
-     *      • Remove tag from all objects in loaded scene(s).
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -32,7 +30,7 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Changes :
 	 *
-	 *	    Moved editor to the TagsEditor class for TagsSO custom editor.
+	 *	    • Moved editor to the TagsEditor class for TagsSO custom editor.
      *	Now, this window display the editor of the object.
      * 
 	 *	-----------------------------------
@@ -42,7 +40,7 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Changes :
 	 *
-     *	    Finally, tags can be created & removed from this window, and everything is fully
+     *	    • Finally, tags can be created & removed from this window, and everything is fully
      *	saved on a scriptable object reference. Pretty cool, it is.
      *	    Still, tags are not displayed the way I want to, so got to find a way to display them
      *	horizontally and automatically go to the line when reaching the end of the screen.
@@ -58,7 +56,7 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Changes :
 	 *
-	 *	    The window loads & write dynamically project tags on a scriptable object in the
+	 *	    • The window loads & write dynamically project tags on a scriptable object in the
      *	Resources folder. Plus, all of them are drawn on the window. Pretty cool.
      * 
 	 *	-----------------------------------
@@ -68,9 +66,9 @@ public class TagsEditorWindow : EditorWindow
 	 *
 	 *	Changes :
 	 *
-	 *	Creation of the TagsEditorWindow class.
+	 *	    Creation of the TagsEditorWindow class.
      *	    
-     *	    The window can now be called from a Menu Toolbar button, and... That's it.
+     *	    • The window can now be called from a Menu Toolbar button, and... That's it.
      *	Yeah, I know...
 	 *
 	 *	-----------------------------------

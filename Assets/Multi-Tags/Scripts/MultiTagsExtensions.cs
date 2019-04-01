@@ -35,7 +35,7 @@ public static class MultiTagsExtensions
 	 *
 	 *	    Creation of the GameObjectTagsExtensions class.
      *	    
-     *	    - Added a method to access a game object tags with the GetTags method,
+     *	    • Added a method to access a game object tags with the GetTags method,
      *	and to check if the object contain one or multiple tags using the
      *	HasTag & HasTags methods.
 	 *

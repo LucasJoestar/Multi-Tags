@@ -32,7 +32,7 @@ public class TagsSO : ScriptableObject
 	 *
 	 *	Changes :
      *	    
-     *	    Object now get project tags missing from it and adds its own that
+     *	    • Object now get project tags missing from it and adds its own that
      *	the project doesn't have regularly thanks to custom update in editor.
 	 *
 	 *	-----------------------------------
@@ -42,7 +42,7 @@ public class TagsSO : ScriptableObject
 	 *
 	 *	Changes :
      *	    
-     *	    Now, the tags are fully loaded & set when this scriptable object is being loaded. That's really sweet.
+     *	    • Now, the tags are fully loaded & set when this scriptable object is being loaded. That's really sweet.
      *	    You can copy this scriptable object from project to project, and all tags will be fully loaded. That's cool.
      *	    Oh, and the tags of the project not yet on this object are automatically added on load. Awesome, isn't it ?
 	 *
@@ -53,9 +53,9 @@ public class TagsSO : ScriptableObject
 	 *
 	 *	Changes :
 	 *
-	 *	Creation of the TagsScriptableObject class.
+	 *	    Creation of the TagsScriptableObject class.
      *	    
-     *	    Base content, with only a list of Tag objects.
+     *	    • Base content, with only a list of Tag objects.
 	 *
 	 *	-----------------------------------
 	*/

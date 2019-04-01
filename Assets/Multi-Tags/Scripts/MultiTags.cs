@@ -44,7 +44,7 @@ public static class MultiTags
 	 *
 	 *	Changes :
 	 *
-	 *	Creation of the MultiTags class.
+	 *	    Creation of the MultiTags class.
      *	
      *	    • Added a Char variable used to separate tags witht he multi-tags system
      *	from the Unity one.
@@ -160,7 +160,7 @@ public class Tag
      *
      *	    Creation of the Tag class.
      *	    
-     *	    This class Tag contain a name & an associated color.
+     *	    • This class Tag contain a name & an associated color.
      *
      *	-----------------------------------
     */
@@ -225,7 +225,7 @@ public class Tags
      *
      *	    Creation of the Tags class.
      *	    
-     *	    This class Tags contains multiple tags. With its property drawer and methods to add / remove tags, it is more convenient to use than
+     *	    • This class Tags contains multiple tags. With its property drawer and methods to add / remove tags, it is more convenient to use than
      *	a simple list of tags.
      *
      *	-----------------------------------
@@ -235,7 +235,7 @@ public class Tags
     /// <summary>
     /// All tags of this object.
     /// </summary>
-    public Tag[] ObjectTags
+    public Tag[]        ObjectTags
     {
         get; private set;
     }
@@ -243,7 +243,7 @@ public class Tags
     /// <summary>
     /// Name of all this object tags.
     /// </summary>
-    public string[] TagsName
+    public string[]     TagsName
     {
         get { return ObjectTags.Select(t => t.Name).ToArray(); }
     }

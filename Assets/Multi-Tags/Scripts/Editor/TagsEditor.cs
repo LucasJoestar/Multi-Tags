@@ -21,8 +21,6 @@ public class TagsEditor : Editor
 	 *	####### TO DO #######
 	 *	#####################
      *  
-     *      • Change the color of existing tags. That should be easy.
-     *      
      *      • Change the name of created tags. That should be tricky.
 	 *
 	 *	#####################
@@ -53,7 +51,7 @@ public class TagsEditor : Editor
 	 *
 	 *	Changes :
 	 *
-	 *	Creation of the TagsEditor class.
+	 *	    Creation of the TagsEditor class.
      *	
      *	    • Created the editor for the scriptable object TagsSO from the TagsEditorWindow.
      *	    

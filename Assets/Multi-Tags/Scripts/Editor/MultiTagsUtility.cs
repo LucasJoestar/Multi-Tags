@@ -57,7 +57,7 @@ public static class MultiTagsUtility
 	 *
 	 *	Changes :
 	 *
-	 *	    Created methods to draw tags in the editor, with or without a button
+	 *	    • Created methods to draw tags in the editor, with or without a button
      *	left to each of them.
 	 *
 	 *	-----------------------------------
@@ -67,7 +67,7 @@ public static class MultiTagsUtility
 	 *
 	 *	Changes :
 	 *
-	 *	    Moved the Char variable used to separate tags to the newly created MultiTags class.
+	 *	    • Moved the Char variable used to separate tags to the newly created MultiTags class.
 	 *
 	 *	-----------------------------------
      * 
@@ -76,7 +76,7 @@ public static class MultiTagsUtility
 	 *
 	 *	Changes :
 	 *
-	 *	    We can now create and remove tags from the project with the
+	 *	    • We can now create and remove tags from the project with the
      *	AddTag & RemoveTag methods.
 	 *
 	 *	-----------------------------------
@@ -86,7 +86,7 @@ public static class MultiTagsUtility
 	 *
 	 *	Changes :
 	 *
-	 *	Creation of the MultiTagsUtility class.
+	 *	    Creation of the MultiTagsUtility class.
      *	
      *	    • Added a Char variable used to separate tags witht he multi-tags system
      *	from the Unity one.
