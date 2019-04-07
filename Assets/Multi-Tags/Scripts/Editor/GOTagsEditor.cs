@@ -128,7 +128,7 @@ public class GOTagsEditor : Editor
     /// <summary>
     /// Alls tags of this object.
     /// </summary>
-    private List<Tag> objectTags = new List<Tag>();
+    private Tags objectTags = new Tags();
     #endregion
 
     #endregion
@@ -168,13 +168,13 @@ public class GOTagsEditor : Editor
         if (isUnfolded)
         {
             // Draws a tag field, to add new tags to editing object(s)
-            newTagIndex = MultiTagsUtility.TagField(newTagIndex, objectTags.ToArray(), AddTag);
+            newTagIndex = MultiTagsUtility.TagField(newTagIndex, objectTags.ObjectTags, AddTag);
 
             GUILayout.Space(15);
 
-            if ((objectTags.Count > 1) || ((objectTags.Count == 1) && (objectTags[0].Name != MultiTags.BuiltInTagsNames[0])))
+            if ((objectTags.ObjectTags.Length > 1) || ((objectTags.ObjectTags.Length == 1) && (objectTags.ObjectTags[0].Name != MultiTags.BuiltInTagsNames[0])))
             {
-                MultiTagsUtility.DrawTags(objectTags.ToArray(), RemoveTag);
+                MultiTagsUtility.GUILayoutTags(objectTags);
             }
 
             if (haveTargetsDifferentTags)
@@ -200,7 +200,7 @@ public class GOTagsEditor : Editor
         if (serializedObject.isEditingMultipleObjects && targetGO.Select(t => t.tag).Any(t => t != targetGO[0].tag))
         {
             lastTags = targetGO.Select(g => g.tag).ToArray();
-            objectTags = MultiTags.GetTags(targetGO.Select(t => t.GetTags()).Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToArray())).ObjectTags.ToList();
+            objectTags = new Tags(MultiTags.GetTags(targetGO.Select(t => t.GetTags()).Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToArray())).ObjectTags.ToList());
 
             haveTargetsDifferentTags = true;
         }
@@ -209,7 +209,7 @@ public class GOTagsEditor : Editor
         {
             // Get editing object tags
             lastTags = new string[1] { targetGO[0].tag };
-            objectTags = targetGO[0].GetTagsObject().ObjectTags.ToList();
+            objectTags = new Tags(targetGO[0].GetTagsObject().ObjectTags.ToList());
 
             haveTargetsDifferentTags = false;
         }

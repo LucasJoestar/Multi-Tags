@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -64,17 +62,17 @@ public class TagsSO : ScriptableObject
     /// <summary>
     /// All this project tags.
     /// </summary>
-    public Tag[] AllTags { get { return Tags.Concat(UnityBuiltInTags).ToArray(); } }
+    public Tag[] AllTags { get { return UnityBuiltInTags.ObjectTags.Concat(Tags.ObjectTags).ToArray(); } }
 
     /// <summary>
     /// All custom tags of this project.
     /// </summary>
-    public List<Tag> Tags = new List<Tag>();
+    public Tags Tags = new Tags();
 
     /// <summary>
     /// All Unity built-in tags of this project.
     /// </summary>
-    public List<Tag> UnityBuiltInTags = new List<Tag>();
+    public Tags UnityBuiltInTags = new Tags();
 
     #if UNITY_EDITOR
     /// <summary>

@@ -62,14 +62,10 @@ public class TagsEditor : Editor
 	*/
 
     #region Fields / Properties
-
-    #region Editor
     /// <summary>
     /// The editing object of this editor.
     /// </summary>
     private TagsSO tagsSO = null;
-    #endregion
-
     #endregion
 
     #region Methods
@@ -86,28 +82,28 @@ public class TagsEditor : Editor
         EditorGUILayout.LabelField("Unity built-in Tags", EditorStyles.boldLabel);
 
         // If no tags, draws a information box and return
-        if (tagsSO.UnityBuiltInTags == null || tagsSO.UnityBuiltInTags.Count == 0)
+        if (tagsSO.UnityBuiltInTags == null || tagsSO.UnityBuiltInTags.ObjectTags.Length == 0)
         {
             EditorGUILayout.HelpBox("No built-in tag found on this project", MessageType.Info);
         }
         else
         {
             // Draw Unity built-in tags
-            MultiTagsUtility.DrawTags(tagsSO.UnityBuiltInTags.ToArray());
+            MultiTagsUtility.GUILayoutStaticTags(tagsSO.UnityBuiltInTags.ObjectTags);
         }
 
         // Draws a header
         EditorGUILayout.LabelField("Custom Tags", EditorStyles.boldLabel);
 
         // If no tags, draws a information box and return
-        if (tagsSO.Tags == null || tagsSO.Tags.Count == 0)
+        if (tagsSO.Tags == null || tagsSO.Tags.ObjectTags.Length == 0)
         {
             EditorGUILayout.HelpBox("No tag found on this project. How about create a first one ?", MessageType.Info);
         }
         else
         {
             // Draw all custom tags ; if clicking on a tag left button, remove it from the project and repaint
-            if (MultiTagsUtility.DrawTags(tagsSO.Tags.ToArray(), RemoveTag))
+            if (MultiTagsUtility.GUILayoutTags(tagsSO.Tags, RemoveTag))
             {
                 Repaint();
                 return;
@@ -133,8 +129,8 @@ public class TagsEditor : Editor
     {
         List<string> _projectTags = MultiTagsUtility.GetUnityTags().ToList();
         List<string> _projectMultiTags = _projectTags.SelectMany(t => t.Split(MultiTags.TAG_SEPARATOR)).Distinct().ToList();
-        string[] _referenceTags = tagsSO.Tags.Select(t => t.Name).ToArray();
-        string[] _referenceUnityTags = tagsSO.UnityBuiltInTags.Select(t => t.Name).ToArray();
+        string[] _referenceTags = tagsSO.Tags.ObjectTags.Select(t => t.Name).ToArray();
+        string[] _referenceUnityTags = tagsSO.UnityBuiltInTags.ObjectTags.Select(t => t.Name).ToArray();
 
         // Adds each tag of this scriptable object to the project in not having them yet
         foreach (string _tag in _referenceTags)
@@ -156,9 +152,9 @@ public class TagsEditor : Editor
         {
             if (MultiTags.BuiltInTagsNames.Contains(_tag))
             {
-                if (!_referenceUnityTags.Contains(_tag)) tagsSO.UnityBuiltInTags.Add(new Tag(_tag));
+                if (!_referenceUnityTags.Contains(_tag)) tagsSO.UnityBuiltInTags.AddTag(new Tag(_tag));
             }
-            else tagsSO.Tags.Add(new Tag(_tag));
+            else tagsSO.Tags.AddTag(new Tag(_tag));
         }
 
         SaveAsset();
@@ -173,8 +169,8 @@ public class TagsEditor : Editor
         Undo.RecordObject(target, "Tag \"" + _tag.Name + "\" Creation");
 
         MultiTagsUtility.CreateTag(_tag.Name);
-        tagsSO.Tags.Add(_tag);
-        tagsSO.Tags = tagsSO.Tags.OrderByDescending(t => t.Color.grayscale).ToList();
+        tagsSO.Tags.AddTag(_tag);
+        tagsSO.Tags = new Tags(tagsSO.Tags.ObjectTags.OrderByDescending(t => t.Color.grayscale).ToList());
 
         SaveAsset();
     }
@@ -209,7 +205,7 @@ public class TagsEditor : Editor
         MultiTagsUtility.GetUnityTags().Where(t => t.Split(MultiTags.TAG_SEPARATOR).Contains(_tag.Name)).ToList().ForEach(t => MultiTagsUtility.DestroyTag(t));
 
         // Remove tag from object
-        tagsSO.Tags.Remove(_tag);
+        tagsSO.Tags.RemoveTag(_tag);
 
         SaveAsset();
     }

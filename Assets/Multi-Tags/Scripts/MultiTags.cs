@@ -72,7 +72,7 @@ public static class MultiTags
     /// <summary>
     /// All this project tags.
     /// </summary>
-    public static Tag[]                 AllTags                     { get { return TagsAsset.AllTags; } }
+    public static Tag[]                 AllTags                     { get { return TagsAsset?.AllTags ?? new Tag[] { }; } }
 
     /// <summary>
     /// The scriptable object containing all this project tags. Null if none.
@@ -185,6 +185,7 @@ public class Tag
     public Tag(string _name)
     {
         Name = _name;
+        Color = Color.white;
     }
 
     /// <summary>
@@ -235,10 +236,7 @@ public class Tags
     /// <summary>
     /// All tags of this object.
     /// </summary>
-    public Tag[]        ObjectTags
-    {
-        get; private set;
-    }
+    public Tag[]        ObjectTags      = new Tag[] { };
 
     /// <summary>
     /// Name of all this object tags.
@@ -277,8 +275,8 @@ public class Tags
     /// <param name="_tag">Name of the tag to add.</param>
     public void AddTag(string _tag)
     {
-        Tag _toAdd = MultiTags.GetTag(_tag) ?? throw new NullReferenceException("The specified tag does not exist.");
-        AddTag(_toAdd, true);
+        Tag _toAdd = MultiTags.GetTag(_tag) ?? new Tag(_tag);
+        AddTag(_toAdd);
     }
 
     /// <summary>
@@ -287,18 +285,6 @@ public class Tags
     /// <param name="_tag">Tag to add.</param>
     public void AddTag(Tag _tag)
     {
-        AddTag(_tag, false);
-    }
-
-    /// <summary>
-    /// Adds a new tag to the object.
-    /// </summary>
-    /// <param name="_tag">Tag to add.</param>
-    /// <param name="_doExist">Does the tag exist, or should it be checked before add.</param>
-    private void AddTag(Tag _tag, bool _doExist)
-    {
-        if (!_doExist && !MultiTags.DoesTagExist(_tag)) throw new NullReferenceException("The specified tag does not exist.");
-
         Tag[] _newTags = new Tag[ObjectTags.Length + 1];
 
         for (int _i = 0; _i < ObjectTags.Length; _i++)
@@ -306,7 +292,7 @@ public class Tags
             _newTags[_i] = ObjectTags[_i];
         }
 
-        _newTags[_newTags.Length] = _tag;
+        _newTags[_newTags.Length - 1] = _tag;
 
         ObjectTags = _newTags;
     }
@@ -317,8 +303,24 @@ public class Tags
     /// <param name="_tags">Name of the tags to add.</param>
     public void AddTags(string[] _tags)
     {
-        Tag[] _toAdd = MultiTags.GetTags(_tags).ObjectTags ?? throw new NullReferenceException("None of the specified tags does exist.");
-        AddTags(_toAdd, true);
+        Tag[] _newTags = new Tag[ObjectTags.Length + _tags.Length];
+        Tag[] _existingTags = MultiTags.GetTags(_tags).ObjectTags;
+
+        for (int _i = 0; _i < ObjectTags.Length; _i++)
+        {
+            _newTags[_i] = ObjectTags[_i];
+        }
+
+        for (int _i = 0; _i < _existingTags.Length; _i++)
+        {
+            _newTags[ObjectTags.Length + _i] = _existingTags[_i];
+        }
+        for (int _i = _existingTags.Length; _i < _tags.Length; _i++)
+        {
+            _newTags[ObjectTags.Length + _i] = new Tag(_tags[_i]);
+        }
+
+        ObjectTags = _newTags;
     }
 
     /// <summary>
@@ -327,18 +329,6 @@ public class Tags
     /// <param name="_tags">Tags to add.</param>
     public void AddTags(Tag[] _tags)
     {
-        AddTags(_tags, false);
-    }
-
-    /// <summary>
-    /// Adds multiple new tags to the object.
-    /// </summary>
-    /// <param name="_tags">Tags to add.</param>
-    /// <param name="_doExist">Does the tags exist, or should them be checked before add.</param>
-    private void AddTags(Tag[] _tags, bool _doExist)
-    {
-        if (!_doExist) _tags = MultiTags.ExistingTags(_tags) ?? throw new NullReferenceException("None of the specified tags does exist.");
-
         Tag[] _newTags = new Tag[ObjectTags.Length + _tags.Length];
 
         for (int _i = 0; _i < ObjectTags.Length; _i++)
@@ -346,7 +336,7 @@ public class Tags
             _newTags[_i] = ObjectTags[_i];
         }
 
-        for (int _i = 1; _i <= _tags.Length; _i++)
+        for (int _i = 0; _i < _tags.Length; _i++)
         {
             _newTags[ObjectTags.Length + _i] = _tags[_i];
         }
@@ -356,6 +346,15 @@ public class Tags
     #endregion
 
     #region Remove
+    /// <summary>
+    /// Clear this object from all tags.
+    /// </summary>
+    public void Clear()
+    {
+        ObjectTags = new Tag[] { };
+    }
+
+
     /// <summary>
     /// Removes a tag from the object.
     /// </summary>

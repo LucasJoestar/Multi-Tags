@@ -21,7 +21,9 @@ public static class MultiTagsExtensions
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      - What about methods allowing to dynamically add or remove tags
+     *      • Test all extension methods to be sure they work for good.
+     * 
+     *      • What about methods allowing to dynamically add or remove tags
      *  to a game object ? It would be cool !
      * 
 	 *	#####################
