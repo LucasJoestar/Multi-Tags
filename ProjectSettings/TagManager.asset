@@ -4,14 +4,18 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - New Tag
   - New Tag 3
   - New Tag 4
+  - MainCamera|Finish|New Tag 2
+  - New Tag
   - New Tag 5
-  - Blank Tag
   - New Tag 2
+  - Blank Tag
+  - New Tag 6
+  - New Tags
+  - Blank Tag|New Tag 2|New Tag 3|New Tag 4
+  - New Tag|New Tag 2|New Tag 3|New Tag 5
   - Test Tag 2
-  - Test Tag 2|New Tag 3|New Tag|New Tag 2|New Tag 4|New Tag 5|Blank Tag
   layers:
   - Default
   - TransparentFX

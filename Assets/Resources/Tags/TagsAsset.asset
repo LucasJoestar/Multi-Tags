@@ -10,39 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c39479f33b0b54c46bb58971f80805fd, type: 3}
-  m_Name: TagsResource
+  m_Name: TagsAsset
   m_EditorClassIdentifier: 
-  Tags:
+  CustomTags:
     ObjectTags:
-    - Name: New Tag
-      Color: {r: 0.8301887, g: 0.14489143, b: 0.14489143, a: 1}
-    - Name: New Tag 3
-      Color: {r: 0.22245345, g: 0.8679245, b: 0.13510147, a: 1}
-    - Name: New Tag 4
-      Color: {r: 0.10588234, g: 0.90588236, b: 0.8073266, a: 1}
-    - Name: New Tag 5
-      Color: {r: 0.7550347, g: 0.13861692, b: 0.8396226, a: 1}
     - Name: Blank Tag
       Color: {r: 1, g: 1, b: 1, a: 1}
+    - Name: New Tag
+      Color: {r: 0.8962264, g: 0.14796188, b: 0.14796188, a: 1}
     - Name: New Tag 2
-      Color: {r: 0.8773585, g: 0.62570834, b: 0.12829298, a: 1}
+      Color: {r: 0.8679245, g: 0.63776755, b: 0.13510147, a: 1}
+    - Name: New Tag 3
+      Color: {r: 0.13861692, g: 0.8396226, b: 0.15427676, a: 1}
+    - Name: New Tag 4
+      Color: {r: 0.122774996, g: 0.8396226, b: 0.80592895, a: 1}
+    - Name: New Tag 5
+      Color: {r: 0.84974265, g: 0.14983091, b: 0.8584906, a: 1}
+    - Name: New Tag 6
+      Color: {r: 0.6108068, g: 0.12415449, b: 0.8490566, a: 1}
+    - Name: New Tags
+      Color: {r: 0.8436576, g: 0.8773585, b: 0.11173906, a: 1}
     - Name: Test Tag 2
-      Color: {r: 0.12941177, g: 0.3305811, b: 0.83137256, a: 1}
+      Color: {r: 0.118725546, g: 0.1632725, b: 0.8679245, a: 1}
   UnityBuiltInTags:
     ObjectTags:
-    - Name: Untagged
-      Color: {r: 1, g: 1, b: 1, a: 1}
-    - Name: Respawn
+    - Name: EditorOnly
       Color: {r: 1, g: 1, b: 1, a: 1}
     - Name: Finish
       Color: {r: 1, g: 1, b: 1, a: 1}
-    - Name: EditorOnly
+    - Name: GameController
       Color: {r: 1, g: 1, b: 1, a: 1}
     - Name: MainCamera
       Color: {r: 1, g: 1, b: 1, a: 1}
     - Name: Player
       Color: {r: 1, g: 1, b: 1, a: 1}
-    - Name: GameController
+    - Name: Respawn
       Color: {r: 1, g: 1, b: 1, a: 1}
     - Name: Untagged
       Color: {r: 1, g: 1, b: 1, a: 1}

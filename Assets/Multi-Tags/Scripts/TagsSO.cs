@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Scriptable object used to save and access to all tags of a project
@@ -19,7 +18,7 @@ public class TagsSO : ScriptableObject
 	 *	####### TO DO #######
 	 *	#####################
      *  
-     *      ... Nothing to see here.
+     *      Nothing to see here...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -62,25 +61,34 @@ public class TagsSO : ScriptableObject
     /// <summary>
     /// All this project tags.
     /// </summary>
-    public Tag[] AllTags { get { return UnityBuiltInTags.ObjectTags.Concat(Tags.ObjectTags).ToArray(); } }
+    public Tag[]        AllTags
+    {
+        get
+        {
+            Tag[] _allTags = new Tag[UnityBuiltInTags.ObjectTags.Length + CustomTags.ObjectTags.Length];
+
+            for (int _i = 0; _i < UnityBuiltInTags.ObjectTags.Length; _i++)
+            {
+                _allTags[_i] = UnityBuiltInTags.ObjectTags[_i];
+            }
+            for (int _i = 0; _i < CustomTags.ObjectTags.Length; _i++)
+            {
+                _allTags[_i + UnityBuiltInTags.ObjectTags.Length] = CustomTags.ObjectTags[_i];
+            }
+
+            return _allTags;
+        }
+    }
 
     /// <summary>
     /// All custom tags of this project.
     /// </summary>
-    public Tags Tags = new Tags();
+    public Tags         CustomTags              = new Tags();
 
     /// <summary>
     /// All Unity built-in tags of this project.
     /// </summary>
-    public Tags UnityBuiltInTags = new Tags();
-
-    #if UNITY_EDITOR
-    /// <summary>
-    /// Counter used to initialize project with object when reaching a certain value.
-    /// </summary>
-    private int initializeCounter = 0;
-    #endif
-
+    public Tags         UnityBuiltInTags        = new Tags();
     #endregion
 
     #region Methods
@@ -90,39 +98,19 @@ public class TagsSO : ScriptableObject
     #region Unity Editor
     #if UNITY_EDITOR
     /// <summary>
-    /// Initializes the project tags with this object.
+    /// Connect the project tags with this object.
     /// </summary>
-    private void Initialize()
+    private void Connect()
     {
         // Initializes the project with this object
         UnityEditor.Editor _thisEditor = UnityEditor.Editor.CreateEditor(this);
 
-        if (!_thisEditor)
-        {
-            return;
-        }
+        if (!_thisEditor) return;
 
-        _thisEditor.GetType().InvokeMember("Initialize", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public, null, _thisEditor, null);
+        _thisEditor.GetType().InvokeMember("ConnectProjectTags", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.NonPublic, null, _thisEditor, null);
 
         // Destroy the created editor
         DestroyImmediate(_thisEditor);
-    }
-
-    /// <summary>
-    /// Custom update of this object when in editor.
-    /// </summary>
-    private void EditorUpdate()
-    {
-        // Increase counter
-        initializeCounter++;
-
-        // When reaching a certain limit, initialize the project with the object
-        // and reset counter
-        if (initializeCounter > 10000)
-        {
-            Initialize();
-            initializeCounter = 0;
-        }
     }
     #endif
     #endregion
@@ -134,7 +122,7 @@ public class TagsSO : ScriptableObject
     private void OnDestroy()
     {
         #if UNITY_EDITOR
-        UnityEditor.EditorApplication.update -= EditorUpdate;
+        UnityEditor.EditorApplication.quitting -= Connect;
         #endif
     }
 
@@ -142,19 +130,15 @@ public class TagsSO : ScriptableObject
     private void OnEnable()
     {
         #if UNITY_EDITOR
-        // In editor, intialize project with object on enable
-        // and do it every X times with custom update
-        UnityEditor.EditorApplication.update -= EditorUpdate;
-
+        // In editor, connect the project with this asset when enabled
         if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
         {
-            Initialize();
-            UnityEditor.EditorApplication.update += EditorUpdate;
+            Connect();
         }
 
-        // Initialize on editor quit
-        UnityEditor.EditorApplication.quitting -= Initialize;
-        UnityEditor.EditorApplication.quitting += Initialize;
+        // Connect on editor quit
+        UnityEditor.EditorApplication.quitting -= Connect;
+        UnityEditor.EditorApplication.quitting += Connect;
         #endif
     }
     #endregion

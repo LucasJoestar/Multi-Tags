@@ -23,9 +23,6 @@ public static class MultiTagsExtensions
      * 
      *      • Test all extension methods to be sure they work for good.
      * 
-     *      • What about methods allowing to dynamically add or remove tags
-     *  to a game object ? It would be cool !
-     * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
@@ -46,23 +43,23 @@ public static class MultiTagsExtensions
 
     #region GameObject
     /// <summary>
-    /// Get all this game object tags.
+    /// Get all this game object tags name.
     /// </summary>
     /// <param name="_go">Game object to get tags from.</param>
     /// <returns>Returns all this game object tags.</returns>
-    public static string[] GetTags(this GameObject _go)
+    public static string[] GetTagsName(this GameObject _go)
     {
         return _go.tag.Split(MultiTags.TAG_SEPARATOR);
     }
 
     /// <summary>
-    /// Get a Tags object from all this game object tags.
+    /// Get a Tag objects from all this game object tags.
     /// </summary>
     /// <param name="_go">Game object to get tags from.</param>
     /// <returns>Returns a Tags object from all this game object tags.</returns>
-    public static Tags GetTagsObject(this GameObject _go)
+    public static Tag[] GetTags(this GameObject _go)
     {
-        return MultiTags.GetTags(_go.GetTags());
+        return MultiTags.GetTags(_go.GetTagsName());
     }
 
 
@@ -74,7 +71,7 @@ public static class MultiTagsExtensions
     /// <returns>Returns true if the game object has the specified tag, false otherwise.</returns>
     public static bool HasTag(this GameObject _go, string _tag)
     {
-        return _go.GetTags().Contains(_tag);
+        return _go.GetTagsName().Contains(_tag);
     }
 
     /// <summary>
@@ -85,7 +82,7 @@ public static class MultiTagsExtensions
     /// <returns>Returns true if the game object has at least one of the specified tags, false otherwise.</returns>
     public static bool HasTag(this GameObject _go, string[] _tags)
     {
-        return _go.GetTags().Intersect(_tags).Any();
+        return _go.GetTagsName().Intersect(_tags).Any();
     }
 
     /// <summary>
@@ -96,11 +93,7 @@ public static class MultiTagsExtensions
     /// <returns>Returns true if the game object has all the specified tags, false if it lacks event one.</returns>
     public static bool HasTags(this GameObject _go, string[] _tags)
     {
-        return !_go.GetTags().Except(_tags).Any();
+        return !_go.GetTagsName().Except(_tags).Any();
     }
-    #endregion
-
-    #region GUI
-
     #endregion
 }

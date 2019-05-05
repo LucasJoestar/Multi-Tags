@@ -22,14 +22,21 @@ public static class MultiTags
 	 *	####### TO DO #######
 	 *	#####################
 	 *
-	 *	    • Get all project tags at runtime, wouldn't it be nice ?
-     *	    
-     *      • Dynamically add or remove tags to the game in runtime ? That would be cool.
+     *      Nothing to see here...
 	 *
 	 *	#####################
 	 *	### MODIFICATIONS ###
 	 *	#####################
 	 *
+     *	Date :			[04 / 05 / 2019]
+	 *	Author :		[Guibert Lucas]
+	 *
+	 *	Changes :
+	 *
+	 *	    • Added methods to add tags to the tags asset in runtime.
+	 *
+	 *	-----------------------------------
+     * 
      *	Date :			[30 / 03 / 2019]
 	 *	Author :		[Guibert Lucas]
 	 *
@@ -61,7 +68,7 @@ public static class MultiTags
     /// <summary>
     /// Path of the scriptable object from the resources folder, containing all tags of the project.
     /// </summary>
-    public const string                 TAGS_SO_PATH                = "Tags/TagsResource";
+    public const string                 TAGS_ASSET_PATH             = "Tags/TagsAsset";
 
 
     /// <summary>
@@ -72,15 +79,54 @@ public static class MultiTags
     /// <summary>
     /// All this project tags.
     /// </summary>
-    public static Tag[]                 AllTags                     { get { return TagsAsset?.AllTags ?? new Tag[] { }; } }
+    public static Tag[]                 AllTags
+    {
+        get
+        {
+            if (TagsAsset) return TagsAsset.AllTags;
+            else return new Tag[] { };
+        }
+    }
 
     /// <summary>
     /// The scriptable object containing all this project tags. Null if none.
     /// </summary>
-    private static TagsSO               TagsAsset                   { get { return Resources.Load<TagsSO>(TAGS_SO_PATH); } }
+    private static TagsSO               TagsAsset                   { get { return Resources.Load<TagsSO>(TAGS_ASSET_PATH); } }
     #endregion
 
     #region Methods
+    /// <summary>
+    /// Method adding a new tag to the scriptable object containing all game tags.
+    /// Be careful, this method is for runtime only, and will not add the new tag the project nor save the tags asset.
+    /// </summary>
+    /// <param name="_tag">Name of the new tag to add to the game.</param>
+    public static void AddTag(string _tag)
+    {
+        TagsAsset.CustomTags.AddTag(_tag);
+    }
+
+    /// <summary>
+    /// Method adding a new tag to the scriptable object containing all game tags.
+    /// Be careful, this method is for runtime only, and will not add the new tag the project nor save the tags asset.
+    /// </summary>
+    /// <param name="_tag">Name of the new tag to add to the game.</param>
+    /// <param name="_color">Color of the tag.</param>
+    public static void AddTag(string _tag, Color _color)
+    {
+        TagsAsset.CustomTags.AddTag(new Tag(_tag, _color));
+    }
+
+
+    /// <summary>
+    /// Get if a specified tag exist.
+    /// </summary>
+    /// <param name="_tag">Tag to check existence.</param>
+    /// <returns>Returns true if it exist, false otherwise.</returns>
+    public static bool DoesTagExist(string _tag)
+    {
+        return AllTags.Any(t => t.Name == _tag);
+    }
+
     /// <summary>
     /// Get if a specified tag exist.
     /// </summary>
@@ -88,17 +134,7 @@ public static class MultiTags
     /// <returns>Returns true if it exist, false otherwise.</returns>
     public static bool DoesTagExist(Tag _tag)
     {
-        return AllTags.Contains(_tag);
-    }
-
-    /// <summary>
-    /// Get existing tags from a tag array.
-    /// </summary>
-    /// <param name="_tags">Tags to check existence.</param>
-    /// <returns>Returns existing tags from the tag array.</returns>
-    public static Tag[] ExistingTags(Tag[] _tags)
-    {
-        return AllTags.Where(t => _tags.Contains(t)).ToArray();
+        return DoesTagExist(_tag.Name);
     }
 
 
@@ -117,9 +153,9 @@ public static class MultiTags
     /// </summary>
     /// <param name="_tagsName">Tags name to get Tags object from.</param>
     /// <returns>Returns the Tags object from these tags name.</returns>
-    public static Tags GetTags(string[] _tagsName)
+    public static Tag[] GetTags(string[] _tagsName)
     {
-        return new Tags(Array.FindAll(AllTags, (Tag _t) => _tagsName.Contains(_t.Name)));
+        return Array.FindAll(AllTags, (Tag _t) => _tagsName.Contains(_t.Name));
     }
 
 
@@ -130,7 +166,17 @@ public static class MultiTags
     /// <returns>Returns first game object found having the tag, or null if none.</returns>
     public static GameObject FindObjectWithTag(string _tag)
     {
-        return Object.FindObjectsOfType<GameObject>().Where(g => g.GetTags().Contains(_tag)).FirstOrDefault();
+        return Object.FindObjectsOfType<GameObject>().Where(g => g.GetTagsName().Contains(_tag)).FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Returns the all game objects found having a certain tag.
+    /// </summary>
+    /// <param name="_tag">Tag to search for.</param>
+    /// <returns>Returns an array of all the game objects found having the tag.</returns>
+    public static GameObject[] FindObjectsWithTag(string _tag)
+    {
+        return Object.FindObjectsOfType<GameObject>().Where(g => g.GetTagsName().Contains(_tag)).ToArray();
     }
     #endregion
 }
@@ -219,6 +265,17 @@ public class Tags
      *	### MODIFICATIONS ###
      *	#####################
      *
+     *	Date :			[04 / 05 / 2019]
+     *	Author :		[Guibert Lucas]
+     *
+     *	Changes :
+     *
+     *	    • Improved methods to add tags by checking if already containing a tag with the same name, and if so not adding it.
+     *	    
+     *	    • Improved methods to remove tags by checking names and not Tag object references.
+     *
+     *	-----------------------------------
+     * 
      *	Date :			[30 / 03 / 2019]
      *	Author :		[Guibert Lucas]
      *
@@ -285,6 +342,9 @@ public class Tags
     /// <param name="_tag">Tag to add.</param>
     public void AddTag(Tag _tag)
     {
+        // If this object already contains a tag with the same name, do not add it.
+        if (ObjectTags.Any(t => t.Name == _tag.Name)) return;
+
         Tag[] _newTags = new Tag[ObjectTags.Length + 1];
 
         for (int _i = 0; _i < ObjectTags.Length; _i++)
@@ -295,6 +355,7 @@ public class Tags
         _newTags[_newTags.Length - 1] = _tag;
 
         ObjectTags = _newTags;
+        Sort();
     }
 
     /// <summary>
@@ -303,8 +364,13 @@ public class Tags
     /// <param name="_tags">Name of the tags to add.</param>
     public void AddTags(string[] _tags)
     {
+        // If this object already contains a tag with the same name, do not add it.
+        string[] _tagNames = ObjectTags.Select(t => t.Name).ToArray();
+        _tags = _tags.Where(t => !_tagNames.Contains(t)).ToArray();
+        if (_tags.Length == 0) return;
+
         Tag[] _newTags = new Tag[ObjectTags.Length + _tags.Length];
-        Tag[] _existingTags = MultiTags.GetTags(_tags).ObjectTags;
+        Tag[] _existingTags = MultiTags.GetTags(_tags);
 
         for (int _i = 0; _i < ObjectTags.Length; _i++)
         {
@@ -321,6 +387,7 @@ public class Tags
         }
 
         ObjectTags = _newTags;
+        Sort();
     }
 
     /// <summary>
@@ -329,6 +396,11 @@ public class Tags
     /// <param name="_tags">Tags to add.</param>
     public void AddTags(Tag[] _tags)
     {
+        // If this object already contains a tag with the same name, do not add it.
+        string[] _tagNames = ObjectTags.Select(t => t.Name).ToArray();
+        _tags = _tags.Where(t => !_tagNames.Contains(t.Name)).ToArray();
+        if (_tags.Length == 0) return;
+
         Tag[] _newTags = new Tag[ObjectTags.Length + _tags.Length];
 
         for (int _i = 0; _i < ObjectTags.Length; _i++)
@@ -342,6 +414,7 @@ public class Tags
         }
 
         ObjectTags = _newTags;
+        Sort();
     }
     #endregion
 
@@ -370,7 +443,7 @@ public class Tags
     /// <param name="_tag">Tag to remove.</param>
     public void RemoveTag(Tag _tag)
     {
-        ObjectTags = ObjectTags.Where(t => t != _tag).ToArray();
+        ObjectTags = ObjectTags.Where(t => t.Name != _tag.Name).ToArray();
     }
 
     /// <summary>
@@ -388,7 +461,18 @@ public class Tags
     /// <param name="_tags">Tags to remove.</param>
     public void RemoveTags(Tag[] _tags)
     {
-        ObjectTags = ObjectTags.Where(t => !_tags.Contains(t)).ToArray();
+        string[] _tagNames = _tags.Select(t => t.Name).ToArray();
+        ObjectTags = ObjectTags.Where(t => !_tagNames.Contains(t.Name)).ToArray();
+    }
+    #endregion
+
+    #region Sort
+    /// <summary>
+    /// Sort the <see cref="ObjectTags"/> array.
+    /// </summary>
+    public void Sort()
+    {
+        Array.Sort(ObjectTags, new Comparison<Tag>((first, second) => first.Name.CompareTo(second.Name)));
     }
     #endregion
 
