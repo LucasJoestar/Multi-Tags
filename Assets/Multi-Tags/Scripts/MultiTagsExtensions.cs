@@ -85,6 +85,7 @@ public static class MultiTagsExtensions
         return _go.GetTagsName().Intersect(_tags).Any();
     }
 
+
     /// <summary>
     /// Does this game object has all the specified tags ?
     /// </summary>
@@ -94,6 +95,39 @@ public static class MultiTagsExtensions
     public static bool HasTags(this GameObject _go, string[] _tags)
     {
         return !_go.GetTagsName().Except(_tags).Any();
+    }
+
+    /// <summary>
+    /// Does this game object has a specific tag ?
+    /// </summary>
+    /// <param name="_go">Game object to compare tags.</param>
+    /// <param name="_tag">Tag to compare.</param>
+    /// <returns>Returns true if the game object has the specified tag, false otherwise.</returns>
+    public static bool HasTag(this GameObject _go, Tag _tag)
+    {
+        return _go.GetTagsName().Contains(_tag.Name);
+    }
+
+    /// <summary>
+    /// Does this game object has at least one of the specified tags ?
+    /// </summary>
+    /// <param name="_go">Game object to compare tags.</param>
+    /// <param name="_tags">Tags to compare.</param>
+    /// <returns>Returns true if the game object has at least one of the specified tags, false otherwise.</returns>
+    public static bool HasTag(this GameObject _go, Tag[] _tags)
+    {
+        return _go.GetTagsName().Intersect(_tags.Select(t => t.Name)).Any();
+    }
+
+    /// <summary>
+    /// Does this game object has all the specified tags ?
+    /// </summary>
+    /// <param name="_go">Game object to compare tags.</param>
+    /// <param name="_tags">All tags to compare.</param>
+    /// <returns>Returns true if the game object has all the specified tags, false if it lacks event one.</returns>
+    public static bool HasTags(this GameObject _go, Tag[] _tags)
+    {
+        return !_go.GetTagsName().Except(_tags.Select(t => t.Name)).Any();
     }
     #endregion
 }

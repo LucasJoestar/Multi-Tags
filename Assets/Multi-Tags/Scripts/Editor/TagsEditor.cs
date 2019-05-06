@@ -142,8 +142,8 @@ public class TagsEditor : Editor
     {
         List<string> _projectTags = MultiTagsUtility.GetUnityTags().ToList();
         List<string> _projectMultiTags = _projectTags.SelectMany(t => t.Split(MultiTags.TAG_SEPARATOR)).Distinct().ToList();
-        string[] _referenceTags = tagsSO.CustomTags.ObjectTags.Select(t => t.Name).ToArray();
-        string[] _referenceUnityTags = tagsSO.UnityBuiltInTags.ObjectTags.Select(t => t.Name).ToArray();
+        string[] _referenceTags = tagsSO.CustomTags.TagNames;
+        string[] _referenceUnityTags = tagsSO.UnityBuiltInTags.TagNames;
 
         // Adds each tag of this scriptable object to the project in not having them yet
         foreach (string _tag in _referenceTags)

@@ -298,7 +298,7 @@ public class Tags
     /// <summary>
     /// Name of all this object tags.
     /// </summary>
-    public string[]     TagsName
+    public string[]     TagNames
     {
         get { return ObjectTags.Select(t => t.Name).ToArray(); }
     }
@@ -365,7 +365,7 @@ public class Tags
     public void AddTags(string[] _tags)
     {
         // If this object already contains a tag with the same name, do not add it.
-        string[] _tagNames = ObjectTags.Select(t => t.Name).ToArray();
+        string[] _tagNames = TagNames;
         _tags = _tags.Where(t => !_tagNames.Contains(t)).ToArray();
         if (_tags.Length == 0) return;
 
@@ -397,7 +397,7 @@ public class Tags
     public void AddTags(Tag[] _tags)
     {
         // If this object already contains a tag with the same name, do not add it.
-        string[] _tagNames = ObjectTags.Select(t => t.Name).ToArray();
+        string[] _tagNames = TagNames;
         _tags = _tags.Where(t => !_tagNames.Contains(t.Name)).ToArray();
         if (_tags.Length == 0) return;
 
