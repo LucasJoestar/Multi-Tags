@@ -225,7 +225,7 @@ public class GOTagsEditor : Editor
     private void OnDisable()
     {
         //Debug.Log("Game Object Editor => Disable");
-        if (defaultEditor) DestroyImmediate(defaultEditor);
+        if (defaultEditor && defaultEditor.GetType().GetField("m_PreviewCache", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(defaultEditor) != null) DestroyImmediate(defaultEditor);
     }
 
     // This function is called when the object is loaded
