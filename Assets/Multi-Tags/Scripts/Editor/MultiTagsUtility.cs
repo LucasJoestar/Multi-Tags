@@ -28,7 +28,8 @@ public static class MultiTagsUtility
      *  [OPTIONAL]
      *  
      *      • Found a way to make Tags fields work fine with GUILayout groups... I don't even know if it is possible.
-     *  Maybe with creating a GUIStyle for it, since there are methods to calculate its size.
+     *      Maybe with creating a GUIStyle for it, since there are methods to calculate its size.
+     *      Or, better, by stocking rect in Repaint event, and then use it in Layout.
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -2332,7 +2333,7 @@ public class TagsDrawer : PropertyDrawer
     #endregion
 }
 
-
+/*
 [CustomEditor(typeof(ExempleScript)), CanEditMultipleObjects]
 public class ExempleScriptEditor : Editor
 {
@@ -2351,7 +2352,7 @@ public class ExempleScriptEditor : Editor
         eTarget.secondTag = MultiTagsUtility.GUILayoutTagField("Second Tag :", eTarget.secondTag);
         GUILayout.Space(2);
         MultiTagsUtility.GUILayoutTagsField("All Tags :", eTarget.allTags);*/
-
+        /*
         eTarget.name = EditorGUILayout.TextField("Name", eTarget.name);
         MultiTagsUtility.GUILayoutTagField("Tag", serializedObject.FindProperty("firstTag"));
         eTarget.description = EditorGUILayout.TextField("Description", eTarget.description);
@@ -2368,6 +2369,6 @@ public class ExempleScriptEditor : Editor
         MultiTagsUtility.GUITagField(GUILayoutUtility.GetRect(EditorGUIUtility.currentViewWidth, MultiTagsUtility.TagHeight), serializedObject.FindProperty("firstTag"), true);
         eTarget.description = EditorGUILayout.TextField("Description :", eTarget.description);
         MultiTagsUtility.GUITagField(GUILayoutUtility.GetRect(EditorGUIUtility.currentViewWidth, MultiTagsUtility.TagHeight), serializedObject.FindProperty("secondTag"), true);
-        MultiTagsUtility.GUILayoutTagsField(GUIContent.none, serializedObject.FindProperty("allTags"), EditorStyles.label);*/
+        MultiTagsUtility.GUILayoutTagsField(GUIContent.none, serializedObject.FindProperty("allTags"), EditorStyles.label);*//*
     }
-}
+}*/

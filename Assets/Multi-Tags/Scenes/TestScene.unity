@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 1769401561}
   m_Layer: 0
   m_Name: Multi-Tags Exemple 2
-  m_TagString: Untagged
+  m_TagString: New Tag 2|New Tag 3|New Tag 4|New Tag 5|New Tag 6|New Tags
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -391,20 +391,20 @@ MonoBehaviour:
     Color: {r: 0.108134575, g: 0.8490566, b: 0.7993626, a: 1}
   allTags:
     ObjectTags:
-    - Name: New Tag 2
-      Color: {r: 0.8962264, g: 0.7129353, b: 0.17332679, a: 1}
-    - Name: Test Tag 2
-      Color: {r: 0.120016046, g: 0.19034755, b: 0.8773585, a: 1}
     - Name: New Tag
       Color: {r: 0.9056604, g: 0.11534355, b: 0.11534355, a: 1}
-    - Name: New Tag 5
-      Color: {r: 0.8773585, g: 0.120016046, b: 0.77565736, a: 1}
+    - Name: New Tag 2
+      Color: {r: 0.8962264, g: 0.7129353, b: 0.17332679, a: 1}
     - Name: New Tag 3
       Color: {r: 0.2001374, g: 0.8867924, b: 0.11294055, a: 1}
     - Name: New Tag 4
       Color: {r: 0.108134575, g: 0.8490566, b: 0.7993626, a: 1}
-    - Name: Blank Tag
-      Color: {r: 1, g: 1, b: 1, a: 1}
+    - Name: New Tag 5
+      Color: {r: 0.8773585, g: 0.120016046, b: 0.77565736, a: 1}
+    - Name: New Tag 6
+      Color: {r: 0.63457006, g: 0.114142045, b: 0.8962264, a: 1}
+    - Name: Test Tag 2
+      Color: {r: 0.120016046, g: 0.19034755, b: 0.8773585, a: 1}
 --- !u!4 &1769401562
 Transform:
   m_ObjectHideFlags: 0

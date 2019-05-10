@@ -29,7 +29,7 @@ MonoBehaviour:
     - Name: New Tag 6
       Color: {r: 0.63457006, g: 0.114142045, b: 0.8962264, a: 1}
     - Name: New Tags
-      Color: {r: 0.865809, g: 0.8773585, b: 0.120016046, a: 1}
+      Color: {r: 0.8646368, g: 0.8867924, b: 0.11294055, a: 1}
     - Name: Test Tag 2
       Color: {r: 0.120016046, g: 0.19034755, b: 0.8773585, a: 1}
   UnityBuiltInTags:

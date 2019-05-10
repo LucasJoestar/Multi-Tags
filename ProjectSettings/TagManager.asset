@@ -11,11 +11,12 @@ TagManager:
   - New Tag 5
   - New Tag 2
   - Blank Tag
-  - New Tag 6
   - New Tags
   - Blank Tag|New Tag 2|New Tag 3|New Tag 4
   - Test Tag 2
   - New Tag|New Tag 2|New Tag 3|New Tag 5
+  - New Tag 2|New Tag 3|New Tag 4|New Tag 5|New Tag 6|New Tags
+  - New Tag 6
   layers:
   - Default
   - TransparentFX

@@ -78,29 +78,29 @@ public class TagsEditorWindow : EditorWindow
 
     #region Fields / Properties
     /// <summary>Backing field for <see cref="Reference"/>.</summary>
-    private TagsSO                  reference                       = null;
+    [SerializeField] private TagsSO                  reference                       = null;
 
     /// <summary>
     /// Editor of the tags object reference.
     /// </summary>
-    private TagsEditor              referenceEditor                 = null;
+    [SerializeField] private TagsEditor              referenceEditor                 = null;
 
 
     /// <summary>
     /// Index used for the window toolbar.
     /// </summary>
-    private int                     toolbarIndex                    = 0;
+    [SerializeField] private int                     toolbarIndex                    = 0;
 
     /// <summary>
     /// All available options of the toolbar.
     /// </summary>
-    private readonly GUIContent[]   toolbarOptions                  = new GUIContent[] { new GUIContent("Tags", "Edit the tags of the project."), new GUIContent("Informations", "Everything you need to know to perfectly use these tags."), new GUIContent("Contact", "How to contact me, if you have any question or suggestion.") };
+    [SerializeField] private readonly GUIContent[]   toolbarOptions                  = new GUIContent[] { new GUIContent("Tags", "Edit the tags of the project."), new GUIContent("Informations", "Everything you need to know to perfectly use these tags."), new GUIContent("Contact", "How to contact me, if you have any question or suggestion.") };
 
 
     /// <summary>
     /// Vector of this window scrollbar.
     /// </summary>
-    private Vector2                 scrollbar                       = Vector2.zero;
+    [SerializeField] private Vector2                 scrollbar                       = Vector2.zero;
     #endregion
 
     #region Methods
@@ -122,7 +122,17 @@ public class TagsEditorWindow : EditorWindow
         }
 
         GUILayout.FlexibleSpace();
+
+        
         GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// Draws tags of the project.
+    /// </summary>
+    private void DrawTags()
+    {
+        referenceEditor.DrawTags();
     }
 
     /// <summary>
@@ -198,7 +208,7 @@ public class TagsEditorWindow : EditorWindow
         {
             case 0:
                 // Edit this project tags
-                referenceEditor.DrawTags();
+                DrawTags();
                 break;
 
             case 1:
