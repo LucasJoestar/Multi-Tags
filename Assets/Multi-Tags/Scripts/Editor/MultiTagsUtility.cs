@@ -28,8 +28,7 @@ public static class MultiTagsUtility
      *  [OPTIONAL]
      *  
      *      • Found a way to make Tags fields work fine with GUILayout groups... I don't even know if it is possible.
-     *      Maybe with creating a GUIStyle for it, since there are methods to calculate its size.
-     *      Or, better, by stocking rect in Repaint event, and then use it in Layout.
+     *      Maybe by stocking rect in Repaint event, and then use it in Layout.
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -2332,43 +2331,3 @@ public class TagsDrawer : PropertyDrawer
     }
     #endregion
 }
-
-/*
-[CustomEditor(typeof(ExempleScript)), CanEditMultipleObjects]
-public class ExempleScriptEditor : Editor
-{
-    ExempleScript eTarget;
-
-    private void OnEnable()
-    {
-        eTarget = (ExempleScript)target;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        /*eTarget.name = EditorGUILayout.TextField("Name :", eTarget.name);
-        eTarget.firstTag = MultiTagsUtility.GUILayoutTagField("First Tag :", eTarget.firstTag);
-        eTarget.description = EditorGUILayout.TextField("Description :", eTarget.description);
-        eTarget.secondTag = MultiTagsUtility.GUILayoutTagField("Second Tag :", eTarget.secondTag);
-        GUILayout.Space(2);
-        MultiTagsUtility.GUILayoutTagsField("All Tags :", eTarget.allTags);*/
-        /*
-        eTarget.name = EditorGUILayout.TextField("Name", eTarget.name);
-        MultiTagsUtility.GUILayoutTagField("Tag", serializedObject.FindProperty("firstTag"));
-        eTarget.description = EditorGUILayout.TextField("Description", eTarget.description);
-        MultiTagsUtility.GUILayoutTagField(serializedObject.FindProperty("secondTag"));
-        MultiTagsUtility.GUILayoutTagsField("All Tags", serializedObject.FindProperty("allTags"));
-
-        /*eTarget.name = EditorGUILayout.TextField("Name :", eTarget.name);
-        MultiTagsUtility.GUILayoutTagField("First Tag :", serializedObject.FindProperty("firstTag"));
-        eTarget.description = EditorGUILayout.TextField("Description :", eTarget.description);
-        MultiTagsUtility.GUILayoutTagField("Second Tag :", serializedObject.FindProperty("secondTag"));
-        MultiTagsUtility.GUILayoutTagsField("All Tags :", serializedObject.FindProperty("allTags"));*/
-
-        /*eTarget.name = EditorGUILayout.TextField("Name :", eTarget.name);
-        MultiTagsUtility.GUITagField(GUILayoutUtility.GetRect(EditorGUIUtility.currentViewWidth, MultiTagsUtility.TagHeight), serializedObject.FindProperty("firstTag"), true);
-        eTarget.description = EditorGUILayout.TextField("Description :", eTarget.description);
-        MultiTagsUtility.GUITagField(GUILayoutUtility.GetRect(EditorGUIUtility.currentViewWidth, MultiTagsUtility.TagHeight), serializedObject.FindProperty("secondTag"), true);
-        MultiTagsUtility.GUILayoutTagsField(GUIContent.none, serializedObject.FindProperty("allTags"), EditorStyles.label);*//*
-    }
-}*/

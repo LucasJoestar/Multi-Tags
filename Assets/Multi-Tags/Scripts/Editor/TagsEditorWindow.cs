@@ -122,8 +122,6 @@ public class TagsEditorWindow : EditorWindow
         }
 
         GUILayout.FlexibleSpace();
-
-        
         GUILayout.EndHorizontal();
     }
 
