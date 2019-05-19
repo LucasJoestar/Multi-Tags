@@ -387,7 +387,7 @@ public static class MultiTagsUtility
         TagsSO _tagsAsset = GetTagsAsset();
 
         // Get all project objects with tag to remove it from them
-        GameObject[] _allObjectsWithTag = Resources.FindObjectsOfTypeAll<GameObject>().Where(g => g.GetTagsName().Contains(_tag)).ToArray();
+        GameObject[] _allObjectsWithTag = Resources.FindObjectsOfTypeAll<GameObject>().Where(g => g.GetTagNames().Contains(_tag)).ToArray();
 
         Undo.RecordObjects(_allObjectsWithTag, "Game Object(s) Remove Tag \"" + _tag + "\"");
 
@@ -472,7 +472,7 @@ public static class MultiTagsUtility
 
         foreach (GameObject _gameObject in _gameObjects)
         {
-            if (!_gameObject.GetTagsName().Contains(_tagName))
+            if (!_gameObject.GetTagNames().Contains(_tagName))
             {
                 // If object is tag "Untagged", just tag it with the new one
                 if (_gameObject.tag == MultiTags.BuiltInTagsNames[0])
@@ -525,7 +525,7 @@ public static class MultiTagsUtility
         Undo.RecordObjects(_gameObjects, "Game Object(s) Remove Tag \"" + _tagName + "\"");
 
         // Get object having specified tag
-        _gameObjects = _gameObjects.Where(g => g.GetTagsName().Contains(_tagName)).ToArray();
+        _gameObjects = _gameObjects.Where(g => g.GetTagNames().Contains(_tagName)).ToArray();
 
         string[] _previousTags = _gameObjects.Where(g => g.tag.Contains(MultiTags.TAG_SEPARATOR)).Select(g => g.tag).Distinct().ToArray();
 

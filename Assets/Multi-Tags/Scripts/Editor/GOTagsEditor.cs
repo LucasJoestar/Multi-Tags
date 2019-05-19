@@ -200,7 +200,7 @@ public class GOTagsEditor : Editor
         // get tags in common between them
         if (serializedObject.isEditingMultipleObjects)
         {
-            string[][] _objectTags = targetGO.Select(t => t.GetTagsName()).ToArray();
+            string[][] _objectTags = targetGO.Select(t => t.GetTagNames()).ToArray();
             string[] _tagsInCommon = _objectTags.Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToArray());
 
             editingTags = MultiTags.GetTags(_tagsInCommon);
