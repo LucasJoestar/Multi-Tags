@@ -23,7 +23,7 @@ public class GOTagsEditor : Editor
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      • Make sure everything work perfectly for many Unity versions.
+     *      Nothing to see here...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -252,8 +252,6 @@ public class GOTagsEditor : Editor
 
         // Get editing object(s) tags
         GetObjectsTags();
-
-        //Debug.Log("Game Object Editor => Enable");
     }
 
     // Implement this function to make a custom header

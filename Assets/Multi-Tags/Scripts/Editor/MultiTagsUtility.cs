@@ -25,10 +25,7 @@ public static class MultiTagsUtility
 	 *	####### TO DO #######
 	 *	#####################
      *  
-     *  [OPTIONAL]
-     *  
-     *      • Found a way to make Tags fields work fine with GUILayout groups... I don't even know if it is possible.
-     *      Maybe by stocking rect in Repaint event, and then use it in Layout.
+     *      Nothing to see here...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -2138,7 +2135,7 @@ public static class MultiTagsUtility
         olMinusStyle = new GUIStyle("OL Minus");
         olPlusStyle = new GUIStyle("OL Plus");
 
-        tagHeight = tagStyle.CalcHeight(GUIContent.none, 0);
+        tagHeight = tagStyle.CalcHeight(GUIContent.none, 0) + 1;
         foldoutWidth = EditorStyles.foldout.CalcSize(GUIContent.none).x;
         olMinusSize = olMinusStyle.CalcSize(GUIContent.none);
         olPlusSize = olPlusStyle.CalcSize(GUIContent.none);
@@ -2170,7 +2167,7 @@ public class TagDrawer : PropertyDrawer
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      • Optimization, if possible.
+     *      Nothing to see here...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -2274,6 +2271,9 @@ public class TagsDrawer : PropertyDrawer
     // Override this method to specify how tall the GUI for this field is in pixels
     public override float GetPropertyHeight(SerializedProperty _property, GUIContent _label)
     {
+        if (!MultiTagsUtility.AreTagsUnfolded) return MultiTagsUtility.TagHeight;
+
+
         // Get tags to display, and calcul height depending on their size and field width
         Tags[] _allTags = new Tags[_property.serializedObject.targetObjects.Length];
 

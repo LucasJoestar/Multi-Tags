@@ -19,9 +19,7 @@ public class TagsEditorWindow : EditorWindow
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      • Create a cool window with multiple tabs, allowing to edit tags or change settings.
-     *      
-     *      • Search system for tags.
+     *      Nothing to see here...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
@@ -470,6 +468,8 @@ public class CreateTagWindow : EditorWindow
         else if (doesNameContainSeparator)
         {
             doesNameContainSeparator = false;
+
+            SetSmallSize();
         }
 
         // If a tag with the same name already exist, indicate it and refuse to create the tag
@@ -483,6 +483,8 @@ public class CreateTagWindow : EditorWindow
         else if (doesNameAlreadyExist)
         {
             doesNameAlreadyExist = false;
+
+            SetSmallSize();
         }
 
         // If the name entered is empty, indicate it and refuse to create the tag

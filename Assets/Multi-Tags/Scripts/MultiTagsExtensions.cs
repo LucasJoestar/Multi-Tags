@@ -21,7 +21,7 @@ public static class MultiTagsExtensions
 	 *	####### TO DO #######
 	 *	#####################
      * 
-     *      • Test all extension methods to be sure they work for good.
+     *      Nothing to see here...
      * 
 	 *	#####################
 	 *	### MODIFICATIONS ###
